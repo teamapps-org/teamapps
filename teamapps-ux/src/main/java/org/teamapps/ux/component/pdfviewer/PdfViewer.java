@@ -1,0 +1,217 @@
+package org.teamapps.ux.component.pdfviewer;
+
+import org.teamapps.dto.*;
+import org.teamapps.event.Event;
+import org.teamapps.ux.component.AbstractComponent;
+
+public class PdfViewer extends AbstractComponent {
+    public final Event<UiPdfViewer.PdfInitializedEvent> onPdfInitialized = new Event<>();
+    public final Event<UiPdfViewer.ZoomFactorAutoChangedEvent> onZoomFactorAutoChanged = new Event<>();
+    /**
+     * Fired when loading a PDF URL fails in the client.
+     * Payload contains the requested URL and an error message from the client-side load failure.
+     */
+    public final Event<UiPdfViewer.PdfLoadFailedEvent> onPdfLoadFailed = new Event<>();
+
+    protected String url;
+    protected UiPdfViewMode viewMode;
+    protected UiPdfZoomMode zoomMode = UiPdfZoomMode.TO_WIDTH;
+    protected boolean showDevTools = false;
+    protected int padding = 0;
+    protected int pageSpacing = 5;
+    protected float zoomFactor = 1f;
+    protected int currentPage = 1;
+    protected int maxPageNumber = 0;
+    protected UiBorder pageBorder;
+    protected UiShadow pageShadow;
+    protected String backgroundColor;
+    protected String borderColor;
+
+    public PdfViewer() {
+        this(null);
+    }
+
+    public PdfViewer(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public UiComponent createUiComponent() {
+        UiPdfViewer uiPdfViewer = new UiPdfViewer();
+        mapAbstractUiComponentProperties(uiPdfViewer);
+
+        // IMPORTANT: each new property in the dto has to be registered here!!!
+        uiPdfViewer.setUrl(url);
+        uiPdfViewer.setShowDevTools(showDevTools);
+        uiPdfViewer.setViewMode(viewMode);
+        uiPdfViewer.setPadding(padding);
+        uiPdfViewer.setPageSpacing(pageSpacing);
+        uiPdfViewer.setZoomFactor(zoomFactor);
+        uiPdfViewer.setPageBorder(pageBorder);
+        uiPdfViewer.setZoomMode(zoomMode);
+        uiPdfViewer.setBackgroundColor(backgroundColor);
+        uiPdfViewer.setBorderColor(borderColor);
+
+        return uiPdfViewer;
+    }
+
+    @Override
+    public void handleUiEvent(UiEvent event) {
+        // TODO: This ui event does not arrive on the server yet. => Check with yann!
+        switch (event.getUiEventType()) {
+            case UI_PDF_VIEWER_PDF_INITIALIZED: {
+                UiPdfViewer.PdfInitializedEvent initEvent = (UiPdfViewer.PdfInitializedEvent) event;
+                this.maxPageNumber = initEvent.getNumberOfPages();
+                this.onPdfInitialized.fire(initEvent);
+                break;
+            }
+            case UI_PDF_VIEWER_ZOOM_FACTOR_AUTO_CHANGED: {
+                UiPdfViewer.ZoomFactorAutoChangedEvent zoomChangedEvent = (UiPdfViewer.ZoomFactorAutoChangedEvent) event;
+                this.zoomFactor = zoomChangedEvent.getZoomFactor();
+                this.onZoomFactorAutoChanged.fire(zoomChangedEvent);
+                break;
+            }
+            case UI_PDF_VIEWER_PDF_LOAD_FAILED: {
+                UiPdfViewer.PdfLoadFailedEvent pdfLoadFailedEvent = (UiPdfViewer.PdfLoadFailedEvent) event;
+                this.onPdfLoadFailed.fire(pdfLoadFailedEvent);
+                break;
+            }
+        }
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+        this.currentPage = 1;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetUrlCommand(getId(), url));
+    }
+
+    public boolean getShowDevTools() {
+        return showDevTools;
+    }
+
+    public void setShowDevTools(boolean showDevTools) {
+        this.showDevTools = showDevTools;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetShowDevToolsCommand(getId(), showDevTools));
+    }
+
+    public UiPdfViewMode getViewMode() {
+        return viewMode;
+    }
+
+	public void setViewMode(UiPdfViewMode viewMode) {
+		this.viewMode = viewMode;
+		queueCommandIfRendered(() -> new UiPdfViewer.SetViewModeCommand(getId(), viewMode));
+	}
+
+	public void showPage(int page) {
+		this.currentPage = page;
+		queueCommandIfRendered(() -> new UiPdfViewer.ShowPageCommand(getId(), page));
+	}
+
+	public void nextPage() {
+		if (maxPageNumber > 0 && currentPage >= maxPageNumber) {
+			return;
+		}
+		showPage(currentPage + 1);
+	}
+
+	public void previousPage() {
+		if (currentPage <= 1) {
+			return;
+		}
+		showPage(currentPage - 1);
+	}
+
+	public void zoomIn() {
+		setZoomFactor(zoomFactor + 0.1f);
+	}
+
+	public void zoomOut() {
+		setZoomFactor(Math.max(0.1f, zoomFactor - 0.1f));
+	}
+
+	public void zoomToWidth() {
+		setZoomMode(UiPdfZoomMode.TO_WIDTH);
+	}
+
+	public void zoomToHeight() {
+		setZoomMode(UiPdfZoomMode.TO_HEIGHT);
+	}
+
+	public int getPadding() {
+		return padding;
+	 }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPaddingCommand(getId(), padding));
+    }
+
+    public int getPageSpacing() {
+        return pageSpacing;
+    }
+
+    public void setPageSpacing(int pageSpacing) {
+        this.pageSpacing = pageSpacing;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPageSpacingCommand(getId(), pageSpacing));
+    }
+
+    public float getZoomFactor() {
+        return zoomFactor;
+    }
+
+    /**
+     * CAUTION: This does only work in UiPdfZoomMode.MANUAL!
+     * The modes UiPdfZoomMode.TO_WIDTH and UiPdfZoomMode.TO_HEIGHT
+     * will calculate the ZoomFactor for themselves and set the mode to MANUAL afterwards.
+     * @param zoomFactor the zoom factor to set
+     */
+    public void setZoomFactor(float zoomFactor) {
+        this.zoomFactor = zoomFactor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomFactorCommand(getId(), zoomFactor));
+    }
+
+    public UiPdfZoomMode getZoomMode() {
+        return this.zoomMode;
+    }
+
+    public void setZoomMode(UiPdfZoomMode zoomMode) {
+        this.zoomMode = zoomMode;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetZoomModeCommand(getId(), this.getZoomMode() ));
+    }
+
+    public UiBorder getPageBorder() {
+        return pageBorder;
+    }
+
+    public void setPageBorder(UiBorder pageBorder) {
+        this.pageBorder = pageBorder;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetPageBorderCommand(getId(), pageBorder));
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    /**
+     * Sets the Background color of the container for the pdf canvas
+     * @param cssColor
+     */
+    public void setBackgroundColor(String cssColor) {
+        this.backgroundColor = cssColor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetBackgroundColorCommand(getId(), cssColor));
+    }
+
+    public String getBorderColor() {
+        return this.borderColor;
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+        queueCommandIfRendered(() -> new UiPdfViewer.SetBorderColorCommand(getId(), borderColor));
+    }
+}

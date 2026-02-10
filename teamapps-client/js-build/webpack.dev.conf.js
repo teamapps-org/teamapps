@@ -38,6 +38,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 				"!/img/*",
 				"!/js/*",
 				"!/resources/*",
+				"!/static/*",
 				"!/runtime-resources/*",
 				"!/tsd/*"
 			],

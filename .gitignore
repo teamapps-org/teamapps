@@ -124,3 +124,7 @@ teamapps-client/stats.json
 *.~vsd*
 # Excel Backup File
 *.xlk
+
+# All ai agent stuff
+AGENTS.md
+agent/
