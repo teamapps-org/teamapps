@@ -114,8 +114,8 @@ public class RichTextEditor extends AbstractField<String> {
 					if (!this.isValueLocked()) { // Check if this is a stale event since the server already set a new value, but this event is from before applying it on the client side!!
 						UiTextInputHandlingField.TextInputEvent keyStrokeEvent = (UiTextInputHandlingField.TextInputEvent) event;
 						onTextInput.fire(keyStrokeEvent.getEnteredString());
-						break;
 					}
+					break;
 				case UI_TEXT_INPUT_HANDLING_FIELD_SPECIAL_KEY_PRESSED:
 					UiTextInputHandlingField.SpecialKeyPressedEvent specialKeyPressedEvent = (UiTextInputHandlingField.SpecialKeyPressedEvent) event;
 					onSpecialKeyPressed.fire(SpecialKey.valueOf(specialKeyPressedEvent.getKey().name()));
