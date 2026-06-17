@@ -22,13 +22,14 @@ package org.teamapps.ux.component.chat;
 import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SimpleChatMessage implements ChatMessage {
 
 	private final int id;
 	private final Resolvable userImage;
 	private final String userNickname;
-	private final String text;
+	private final List<ChatMessageContent> content;
 	private final List<ChatPhoto> photos;
 	private final List<ChatFile> files;
 	private final boolean deleted;
@@ -38,10 +39,14 @@ public class SimpleChatMessage implements ChatMessage {
 	}
 
 	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
+		this(id, userImage, userNickname, List.of(ChatMessageContent.text(text)), photos, files, deleted);
+	}
+
+	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
 		this.id = id;
 		this.userImage = userImage;
 		this.userNickname = userNickname;
-		this.text = text;
+		this.content = content == null ? List.of() : content;
 		this.photos = photos;
 		this.files = files;
 		this.deleted = deleted;
@@ -64,7 +69,16 @@ public class SimpleChatMessage implements ChatMessage {
 
 	@Override
 	public String getText() {
-		return text;
+		return content.stream()
+				.filter(ChatMessageTextContent.class::isInstance)
+				.map(ChatMessageTextContent.class::cast)
+				.map(ChatMessageTextContent::text)
+				.collect(Collectors.joining("\n"));
+	}
+
+	@Override
+	public List<ChatMessageContent> getContent() {
+		return content;
 	}
 
 	@Override

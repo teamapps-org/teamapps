@@ -40,7 +40,11 @@ public class ChatMessageBatch {
 	}
 
 	public Integer getEarliestMessageId() {
-		return messages.size() > 0 ? messages.get(0).getId() : null;
+		return !messages.isEmpty() ? messages.get(0).getId() : null;
+	}
+
+	public boolean containsMessage(int messageId) {
+		return messages.stream().anyMatch(message -> message.getId() == messageId);
 	}
 
 }

@@ -25,7 +25,7 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
-    grid-template-areas: "userimage userNickname" "userimage text" "userimage photos" "userimage files";
+    grid-template-areas: "userimage userNickname" "userimage content" "userimage photos" "userimage files";
 
     .user-image {
       grid-area: userimage;
@@ -42,10 +42,15 @@
       grid-area: userNickname;
       font-weight: bold;
     }
-    .text {
-      grid-area: text;
+    .content {
+      grid-area: content;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      .content-component {
+        min-width: 0;
+        margin-top: 2px;
+      }
     }
     .photos {
       grid-area: photos;
@@ -91,7 +96,7 @@
       //.user-nickname {
       //  align-self: center;
       //}
-      .text, .photos, .files {
+      .content, .photos, .files {
         display: none;
       }
 

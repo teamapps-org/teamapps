@@ -19,6 +19,7 @@
  */
 class UiChatDisplay extends UiComponent {
 	UiChatMessageBatch initialMessages;
+	Integer initialTopMessageId;
     boolean contextMenuEnabled = false;
     String deletedMessageIcon;
 
@@ -26,10 +27,14 @@ class UiChatDisplay extends UiComponent {
 	command updateMessage(UiChatMessage message);
 	command deleteMessage(int messageId);
 	command clearMessages(UiChatMessageBatch messages);
+	command scrollToMessage(int messageId);
     command closeContextMenu();
 
 	query requestPreviousMessages() returns UiChatMessageBatch;
     query requestContextMenu(int chatMessageId) returns UiComponent*;
+
+	event messageViewed(int messageId);
+	event photoClicked(int messageId, int photoIndex);
 }
 
 class UiChatInput extends UiComponent {
@@ -61,9 +66,15 @@ class UiChatMessage {
 	String userImageUrl;
 	String userNickname;
 	String text;
+	List<UiChatMessageContent> content;
 	List<UiChatPhoto> photos;
 	List<UiChatFile> files;
 	boolean deleted;
+}
+
+class UiChatMessageContent {
+	String text;
+	UiComponent* component;
 }
 
 class UiChatPhoto {
