@@ -36,6 +36,7 @@ public class Tab {
 	public final Event<Void> onClosed = new Event<>();
 
 	private final String clientId = UUID.randomUUID().toString();
+	private String debuggingId;
 	private TabPanel tabPanel;
 
 	private Icon icon;
@@ -72,6 +73,7 @@ public class Tab {
 		uiTab.setToolbar(Component.createUiClientObjectReference(this.toolbar));
 		uiTab.setContent(Component.createUiClientObjectReference(content));
 		uiTab.setVisible(visible);
+		uiTab.setDebuggingId(debuggingId);
 		return uiTab;
 	}
 
@@ -85,6 +87,18 @@ public class Tab {
 
 	/*package-private*/ String getClientId() {
 		return clientId;
+	}
+
+	public Tab setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
+		if (tabPanel != null) {
+			tabPanel.handleTabConfigurationChanged(this);
+		}
+		return this;
+	}
+
+	public String getDebuggingId() {
+		return debuggingId;
 	}
 
 	public String getTitle() {

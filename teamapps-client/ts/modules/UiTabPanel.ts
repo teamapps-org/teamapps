@@ -243,8 +243,8 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 	}
 
 	private _createTab(tabConfig: UiTabConfig, index: number = Number.MAX_SAFE_INTEGER): Tab {
-		const $tabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
-		const $dropDownTabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable);
+		const $tabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable, tabConfig.debuggingId);
+		const $dropDownTabButton = this.createTabButton(tabConfig.tabId, tabConfig.icon, tabConfig.caption, tabConfig.closeable, tabConfig.debuggingId);
 		$tabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
 		$dropDownTabButton.addEventListener("mousedown", () => this.selectTab(tabConfig.tabId, true));
 
@@ -284,11 +284,14 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		}
 	}
 
-	private createTabButton(tabId: string, icon: string, caption: string, closeable: boolean) {
+	private createTabButton(tabId: string, icon: string, caption: string, closeable: boolean, debuggingId: string) {
 		const $tabButton = parseHtml(`<div class="tab-button" data-tab-name="${tabId}" draggable="true">
                      ${icon ? `<div class="tab-button-icon"><div class="img img-16" style="background-image: url('${icon}');"></div></div>` : ''}
                      <div class="tab-button-caption">${caption}</div>                                                                                                                          	
                 </div>`);
+		if (debuggingId != null) {
+			$tabButton.setAttribute("data-teamapps-debugging-id", debuggingId);
+		}
 
 		if (closeable) {
 			const closeIconPath = "/resources/window-close-grey.png";
@@ -359,12 +362,12 @@ export class UiTabPanel extends AbstractUiComponent<UiTabPanelConfig> implements
 		this.updateEmptyState();
 	}
 
-	setTabConfiguration(tabId: string, icon: string, caption: string, closeable: boolean, visible: boolean, rightSide: boolean): void {
+	setTabConfiguration(tabId: string, icon: string, caption: string, closeable: boolean, visible: boolean, rightSide: boolean, debuggingId: string): void {
 		let tab = this.getTabById(tabId);
 		tab.$button.innerHTML = '';
-		tab.$button.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable).querySelectorAll<HTMLElement>(":scope >*")));
+		tab.$button.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable, debuggingId).querySelectorAll<HTMLElement>(":scope >*")));
 		tab.$dropDownTabButton.innerHTML = '';
-		tab.$dropDownTabButton.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable).querySelectorAll<HTMLElement>(":scope >*")));
+		tab.$dropDownTabButton.append(...Array.from(this.createTabButton(tabId, icon, caption, closeable, debuggingId).querySelectorAll<HTMLElement>(":scope >*")));
 		if (rightSide && !tab.config.rightSide) {
 			this.$rightButtonsWrapper.appendChild(tab.$button);
 			this.$dropButtonContainerRight.appendChild(tab.$dropDownTabButton);

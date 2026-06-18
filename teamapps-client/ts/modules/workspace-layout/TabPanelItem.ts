@@ -170,7 +170,7 @@ export class TabPanelItem implements ItemTreeItem<UiTabPanel> {
 	}
 
 	setTabConfiguration(viewName: string, tabIcon: string, tabCaption: string, tabCloseable: boolean, visible: boolean) {
-		this.component.setTabConfiguration(viewName, tabIcon, tabCaption, tabCloseable, visible, false);
+		this.component.setTabConfiguration(viewName, tabIcon, tabCaption, tabCloseable, visible, false, null);
 		this.updateWindowToolButtons();
 	}
 

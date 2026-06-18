@@ -39,7 +39,7 @@ class UiTabPanel extends UiComponent implements Emptyable {
 
 	command setTabToolbar(String tabId, UiToolbar* toolbar);
 	command setTabContent(String tabId, UiComponent* component);
-	command setTabConfiguration(String tabId, String icon, String caption, boolean closeable, boolean visible, boolean rightSide);
+	command setTabConfiguration(String tabId, String icon, String caption, boolean closeable, boolean visible, boolean rightSide, String debuggingId);
 
 	event tabSelected(String tabId);
 	event tabNeedsRefresh(String tabId);
@@ -61,4 +61,5 @@ class UiTab {
 	boolean visible;
 	UiToolbar* toolbar;
 	UiComponent* content;
+	String debuggingId;
 }

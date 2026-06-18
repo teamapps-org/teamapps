@@ -236,13 +236,13 @@ public class TabPanel extends AbstractComponent implements Component {
 	/*package-private*/ void handleTabConfigurationChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide(), tab.getDebuggingId()));
 	}
 
 	/*package-private*/ void handleTabVisibilityChanged(Tab tab) {
 		String iconString = getSessionContext().resolveIcon(tab.getIcon());
 		String caption = tab.getTitle();
-		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide()));
+		queueCommandIfRendered(() -> new UiTabPanel.SetTabConfigurationCommand(getId(), tab.getClientId(), iconString, caption, tab.isCloseable(), tab.isVisible(), tab.isRightSide(), tab.getDebuggingId()));
 	}
 
 }
