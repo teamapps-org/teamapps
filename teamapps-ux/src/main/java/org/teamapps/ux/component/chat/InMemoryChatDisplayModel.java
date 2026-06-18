@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.chat;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.ArrayList;
@@ -88,9 +89,17 @@ public class InMemoryChatDisplayModel extends AbstractChatDisplayModel {
 	}
 
 	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
+		return addMessage(userImage, userNickname, content, photos, files, deleted, null, null, null, null);
+	}
+
+	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted, String footer) {
+		return addMessage(userImage, userNickname, content, photos, files, deleted, null, null, null, footer);
+	}
+
+	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted, Color backgroundColor, Color borderColor, Color textColor, String footer) {
 		ChatMessageBatch chatMessageBatch = transformList(chatMessages -> {
 			boolean firstMessage = chatMessages.isEmpty();
-			SimpleChatMessage message = new SimpleChatMessage(chatMessageIdCounter.incrementAndGet(), userImage, userNickname, content, photos, files, deleted);
+			SimpleChatMessage message = new SimpleChatMessage(chatMessageIdCounter.incrementAndGet(), userImage, userNickname, content, photos, files, deleted, backgroundColor, borderColor, textColor, footer);
 			chatMessages.add(message);
 			return new ChatMessageBatch(Collections.singletonList(message), firstMessage);
 		});

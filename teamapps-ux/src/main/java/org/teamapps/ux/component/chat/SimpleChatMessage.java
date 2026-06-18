@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.chat;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public class SimpleChatMessage implements ChatMessage {
 	private final List<ChatMessageContent> content;
 	private final List<ChatPhoto> photos;
 	private final List<ChatFile> files;
+	private final Color backgroundColor;
+	private final Color borderColor;
+	private final Color textColor;
+	private final String footer;
 	private final boolean deleted;
 
 	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, String text) {
@@ -39,16 +44,24 @@ public class SimpleChatMessage implements ChatMessage {
 	}
 
 	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
-		this(id, userImage, userNickname, List.of(ChatMessageContent.text(text)), photos, files, deleted);
+		this(id, userImage, userNickname, text != null ? List.of(ChatMessageContent.text(text)) : List.of(), photos, files, deleted);
 	}
 
 	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
+		this(id, userImage, userNickname, content, photos, files, deleted, null, null, null, null);
+	}
+
+	public SimpleChatMessage(int id, Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted, Color backgroundColor, Color borderColor, Color textColor, String footer) {
 		this.id = id;
 		this.userImage = userImage;
 		this.userNickname = userNickname;
 		this.content = content == null ? List.of() : content;
 		this.photos = photos;
 		this.files = files;
+		this.backgroundColor = backgroundColor;
+		this.borderColor = borderColor;
+		this.textColor = textColor;
+		this.footer = footer;
 		this.deleted = deleted;
 	}
 
@@ -91,6 +104,27 @@ public class SimpleChatMessage implements ChatMessage {
 		return files;
 	}
 
+	@Override
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	@Override
+	public Color getBorderColor() {
+		return borderColor;
+	}
+
+	@Override
+	public Color getTextColor() {
+		return textColor;
+	}
+
+	@Override
+	public String getFooter() {
+		return footer;
+	}
+
+	@Override
 	public boolean isDeleted() {
 		return deleted;
 	}

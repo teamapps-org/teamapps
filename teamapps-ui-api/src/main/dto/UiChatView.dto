@@ -69,6 +69,10 @@ class UiChatMessage {
 	List<UiChatMessageContent> content;
 	List<UiChatPhoto> photos;
 	List<UiChatFile> files;
+	String backgroundColor;
+	String borderColor;
+	String textColor;
+	String footer;
 	boolean deleted;
 }
 

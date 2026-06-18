@@ -21,11 +21,32 @@
   overflow: hidden auto;
   padding: 6px;
 
+  .photo-hover() {
+    transform: scale(.985);
+    object-fit: contain;
+  }
+
+  .attachment-button(@padding: 0, @text-align: inherit) {
+    padding: @padding;
+    margin: 0;
+    border: 1px solid var(--ta-inner-border-color);
+    border-radius: var(--ta-border-radius-small);
+    background: var(--ta-bg-color-semi-transparent);
+    box-sizing: border-box;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    text-align: @text-align;
+  }
+
   .message {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: auto;
-    grid-template-areas: "userimage userNickname" "userimage content" "userimage photos" "userimage files";
+    grid-template-areas: "userimage userNickname" "userimage body" "userimage footer";
 
     .user-image {
       grid-area: userimage;
@@ -40,10 +61,19 @@
     }
     .user-nickname {
       grid-area: userNickname;
+      min-width: 0;
       font-weight: bold;
     }
+    .message-body {
+      grid-area: body;
+      min-width: 0;
+    }
+    &.decorated .message-body {
+      padding: 6px 8px;
+      border-radius: var(--ta-border-radius-small);
+    }
     .content {
-      grid-area: content;
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
 
@@ -53,30 +83,109 @@
       }
     }
     .photos {
-      grid-area: photos;
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+      margin-top: 4px;
+      width: 100%;
+      box-sizing: border-box;
+
+      --photo-tile-size: min(85px, calc((100% - 28px) / 8));
+
+      grid-template-columns: repeat(8, minmax(0, var(--photo-tile-size)));
+      grid-auto-rows: var(--photo-tile-size);
+      grid-auto-flow: dense;
+      justify-content: start;
+
+      &.photos-count-1 {
+        display: block;
+
+        .photo-tile {
+          display: block;
+          width: 350px;
+          max-width: 100%;
+          aspect-ratio: 1 / 1;
+          max-height: 350px;
+          &.square, &.portrait, &.landscape {
+            display: inline-block;
+            width: auto;
+            height: auto;
+            aspect-ratio: auto;
+          }
+        }
+        .photo {
+          position: static;
+          width: auto;
+          max-width: 100%;
+          height: auto;
+          max-height: 350px;
+          transform-origin: center center;
+        }
+      }
+      .photo-tile {
+        .attachment-button();
+        position: relative;
+        display: block;
+        grid-column: span 2;
+        grid-row: span 2;
+        overflow: hidden;
+      }
       .photo {
-        width: auto;
-        margin: 2px 0;
-        max-width: 100%;
-        max-height: 600px;
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      }
+      .photo-tile:focus-visible .photo {
+        .photo-hover();
+      }
+      .photo-tile.portrait {
+        grid-column: span 2;
+        grid-row: span 4;
+      }
+      .photo-tile.landscape {
+        grid-column: span 4;
+        grid-row: span 2;
       }
     }
     .files {
-      grid-area: files;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      margin-top: 4px;
 
       .file {
-        display: grid;
-        grid-template-columns: auto 1fr;
+        display: inline-grid;
+        grid-template-columns: auto minmax(0, 1fr);
         grid-template-rows: auto;
         grid-template-areas: "icon name" "icon size";
-        margin: 2px 0;
+        align-items: center;
+        column-gap: 6px;
+        max-width: 100%;
+        .attachment-button(4px 8px 4px 4px, left);
+        color: var(--ta-link-color);
+        vertical-align: top;
+
+        &:hover,
+        &:focus-visible {
+          color: var(--ta-link-hover-color);
+          text-decoration: underline;
+        }
 
         .file-icon {
           grid-area: icon;
-          margin-right: 5px;
         }
         .file-name {
           grid-area: name;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .file-size {
           grid-area: size;
@@ -84,19 +193,34 @@
         }
       }
     }
-    &:not(.deleted) .deleted-icon{
+    .content:empty,
+    .photos:empty,
+    .files:empty,
+    .message-footer:empty {
+      display: none;
+    }
+    .message-footer {
+      grid-area: footer;
+      min-width: 0;
+      margin-top: 2px;
+      color: var(--ta-text-color);
+      font-size: 11px;
+      text-align: right;
+      opacity: .75;
+    }
+    &:not(.deleted) .deleted-icon {
       display: none;
     }
     &.deleted {
       filter: grayscale(1) opacity(0.5);
-      grid-template-columns: auto auto 1fr;
+      grid-template-columns: auto auto minmax(0, 1fr);
       grid-template-areas: "userimage userNickname deletedicon";
       align-items: center;
 
       //.user-nickname {
       //  align-self: center;
       //}
-      .content, .photos, .files {
+      .message-body, .message-footer {
         display: none;
       }
 
@@ -110,6 +234,28 @@
 
     &:not(:last-child) {
       margin-bottom: 3px;
+    }
+  }
+
+  @media (max-width: 880px) {
+    .message {
+      .photos {
+        grid-template-columns: repeat(4, minmax(0, min(80px, calc((100% - 12px) / 4))));
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .message {
+      .photos {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .message .photos .photo-tile:hover .photo {
+      .photo-hover();
     }
   }
 }

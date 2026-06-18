@@ -162,6 +162,10 @@ public class ChatDisplay extends AbstractComponent {
 		uiChatMessage.setFiles(message.getFiles() != null ? message.getFiles().stream()
 				.map(this::createUiChatFile)
 				.collect(Collectors.toList()) : null);
+		uiChatMessage.setBackgroundColor(message.getBackgroundColor() != null ? message.getBackgroundColor().toHtmlColorString() : null);
+		uiChatMessage.setBorderColor(message.getBorderColor() != null ? message.getBorderColor().toHtmlColorString() : null);
+		uiChatMessage.setTextColor(message.getTextColor() != null ? message.getTextColor().toHtmlColorString() : null);
+		uiChatMessage.setFooter(message.getFooter());
 		uiChatMessage.setDeleted(message.isDeleted());
 		return uiChatMessage;
 	}
