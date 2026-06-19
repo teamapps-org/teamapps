@@ -55,29 +55,10 @@ public class FormSection {
 	private int gridGap = 5;
 	private boolean fillRemainingHeight;
 	private boolean hideWhenNoVisibleFields;
-
+	private String debuggingId;
 
 	public FormSection(String id) {
 		this.id = id;
-	}
-
-	public FormSection createCopy(String id) {
-		FormSection section = new FormSection(id);
-		section.setMargin(margin);
-		section.setPadding(padding);
-		section.setBorder(border);
-		section.setShadow(shadow);
-		section.setDrawHeaderLine(drawHeaderLine);
-		section.setBackgroundColor(backgroundColor);
-		section.setCollapsible(collapsible);
-		section.setCollapsed(collapsed);
-		section.setVisible(visible);
-		section.setHeaderTemplate(headerTemplate);
-		section.setHeaderData(headerData);
-		section.setGridGap(gridGap);
-		section.setFillRemainingHeight(fillRemainingHeight);
-		section.setHideWhenNoVisibleFields(hideWhenNoVisibleFields);
-		return section;
 	}
 
 	public void add(GridColumn column) {
@@ -264,6 +245,15 @@ public class FormSection {
 		return this;
 	}
 
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public FormSection setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
+		return this;
+	}
+
 	public UiFormSection createUiFormSection() {
 		List<UiGridColumn> uiColumns = this.columns.stream()
 				.map(column -> column != null ? column.createUiGridColumn() : null)
@@ -289,6 +279,7 @@ public class FormSection {
 		uiSection.setGridGap(this.gridGap);
 		uiSection.setFillRemainingHeight(fillRemainingHeight);
 		uiSection.setHideWhenNoVisibleFields(hideWhenNoVisibleFields);
+		uiSection.setDebuggingId(debuggingId);
 		return uiSection;
 	}
 

@@ -222,7 +222,7 @@ class UiFormSection {
 		const gridGapCss = 'grid-gap:' + config.gridGap + 'px;';
 
 
-		this.$div = parseHtml(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="UiFormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}">
+		this.$div = parseHtml(`<div data-id="${config.id}" data-section-uuid="${this.uuid}" class="UiFormSection ${headerLineClass} ${hasHeaderTemplateClass} ${hasHeaderDataClass} ${collapsibleClass} ${hiddenClass} ${fillRemainingHeightClass}" style="${marginCss}${borderCss}${shadowCss}${backgroundColorCss}" data-teamapps-debugging-id="${config.debuggingId}">
 	<style></style>
     <div class="header">
         <div class="expand-button">

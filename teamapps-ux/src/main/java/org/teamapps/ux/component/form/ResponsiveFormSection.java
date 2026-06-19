@@ -61,6 +61,8 @@ public class ResponsiveFormSection {
 
 	private final ResponsiveFormConfigurationTemplate configurationTemplate;
 
+	private String debuggingId;
+
 
 	protected ResponsiveFormSection(ResponsiveFormLayout formLayout, String id, ResponsiveFormConfigurationTemplate configurationTemplate) {
 		this.formLayout = formLayout;
@@ -310,6 +312,15 @@ public class ResponsiveFormSection {
 		this.minimalNumberOfRow = minimalNumberOfRow;
 	}
 
+	public String getDebuggingId() {
+		return debuggingId;
+	}
+
+	public ResponsiveFormSection setDebuggingId(String debuggingId) {
+		this.debuggingId = debuggingId;
+		return this;
+	}
+
 	protected FormSection createFormSection() {
 		FormSection formSection = createBaseFormSection();
 
@@ -376,6 +387,7 @@ public class ResponsiveFormSection {
 		section.setGridGap(this.gridGap);
 		section.setFillRemainingHeight(this.fillRemainingHeight);
 		section.setHideWhenNoVisibleFields(this.hideWhenNoVisibleFields);
+		section.setDebuggingId(debuggingId);
 		return section;
 	}
 

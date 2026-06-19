@@ -52,6 +52,7 @@ class UiFormSection {
     int gridGap = 7; // pixels between fields, labels etc.
     boolean fillRemainingHeight;
     boolean hideWhenNoVisibleFields;
+    String debuggingId;
 }
 
 interface UiFormSectionPlacement extends UiGridPlacement {
