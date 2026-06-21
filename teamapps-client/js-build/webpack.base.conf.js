@@ -194,7 +194,7 @@ module.exports = function (stageConfig) {
                 },
                 {
                     from: resolve('node_modules/pdfjs-dist/build/pdf.worker.mjs'),
-                    to: path.posix.join(stageConfig.assetsSubDirectory, "/static")
+                    to: path.posix.join(stageConfig.assetsSubDirectory, "/worker-libs")
                 }
             ]),
         ]

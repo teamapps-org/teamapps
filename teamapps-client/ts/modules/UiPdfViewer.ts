@@ -55,7 +55,7 @@ type RenderPdfDocumentOptions = {
 
 // import pdfjsWorker = require('url-loader!pdfjs-dist/build/pdf.worker.mjs');
 // pdfjsLib.GlobalWorkerOptions.workerSrc = "resources/pdf.worker.mjs";
-pdfjsLib.GlobalWorkerOptions.workerSrc = "static/pdf.worker.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "worker-libs/pdf.worker.mjs";
 
 /**
  * Docs for Mozillas pdf.js: https://mozilla.github.io/pdf.js/
