@@ -1,0 +1,147 @@
+/*-
+ * ========================LICENSE_START=================================
+ * TeamApps
+ * ---
+ * Copyright (C) 2014 - 2026 TeamApps.org
+ * ---
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =========================LICENSE_END==================================
+ */
+.UiMasonryGallery {
+  --image-cell-size: min(174px, calc((100% - 4px) / 2));
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--image-cell-size));
+  grid-auto-rows: var(--image-cell-size);
+  grid-auto-flow: dense;
+  justify-content: start;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  .image-tile {
+    position: relative;
+    display: block;
+    grid-column: span 1;
+    grid-row: span 1;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--ta-inner-border-color);
+    border-radius: var(--ta-border-radius-small);
+    background: var(--ta-bg-color-semi-transparent);
+    box-sizing: border-box;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    /* Background layer with blured image. */
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: var(--tile-image);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: none;
+    }
+  }
+
+  .image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    opacity: 0;
+  }
+
+  .image-tile.portrait {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+
+  .image-tile.landscape {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  &.image-count-1 {
+    display: block;
+
+    .image-tile {
+      display: block;
+      width: 350px;
+      max-width: 100%;
+      max-height: 350px;
+      aspect-ratio: 1 / 1;
+
+      &.square,
+      &.portrait,
+      &.landscape {
+        display: inline-block;
+        width: auto;
+        height: auto;
+        aspect-ratio: auto;
+      }
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .image {
+      position: static;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 350px;
+      opacity: 1;
+    }
+  }
+
+  .image-tile-effect() {
+    opacity: .35;
+    filter: blur(7px);
+  }
+  .image-effect() {
+    opacity: 1;
+    transform: scale(.98);
+  }
+
+  .image-tile:focus-visible::before {
+    .image-tile-effect();
+  }
+  .image-tile:focus-visible .image {
+    .image-effect();
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .image-tile:hover::before {
+      .image-tile-effect();
+    }
+    .image-tile:hover .image {
+      .image-effect();
+    }
+  }
+
+}

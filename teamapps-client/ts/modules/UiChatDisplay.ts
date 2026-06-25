@@ -41,7 +41,6 @@ import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
 
 type MessageScrollAlignment = "top" | "bottom" | "nearest";
-type PhotoTileClass = 'portrait' | 'square' | 'landscape';
 interface IScrollAnchor { message: UiChatMessage; offsetTop: number; }
 
 export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler, UiChatDisplayEventSource {
@@ -394,12 +393,6 @@ class UiChatMessage {
 
 		className: ''
 	});
-	private static readonly TILE_RATIOS: Record<PhotoTileClass, number> = {
-		portrait: 0.5,
-		square: 1,
-		landscape: 2,
-	};
-
 	private readonly parent: UiChatDisplay;
 	private readonly $main: HTMLElement;
 	private $body: HTMLElement;
@@ -447,8 +440,6 @@ class UiChatMessage {
 
 		this.getContent().forEach(content => this.renderContent(content));
 		if (this.config.photos != null) {
-			this.$photos.classList.add(`photos-count-${Math.min(this.config.photos.length, 4)}`);
-
 			this.config.photos.forEach((photo, photoIndex) => {
 				const $photo = document.createElement("img");
 				$photo.classList.add("photo");
@@ -466,14 +457,9 @@ class UiChatMessage {
 					this.parent.onPhotoClicked.fire({messageId: this.config.id, photoIndex});
 				});
 
-				$photo.addEventListener("load", () => {
-					this.applyPhotoTileLayout($tile, $photo);
-				});
-
 				$tile.appendChild($photo);
 				this.$photos.appendChild($tile);
 				$photo.src = photo.thumbnailUrl ?? photo.imageUrl;
-				this.applyPhotoTileLayoutWhenDimensionsAreAvailable($tile, $photo);
 			});
 		}
 		if (this.config.files != null) {
@@ -547,42 +533,6 @@ class UiChatMessage {
 		document.body.appendChild($link);
 		$link.click();
 		$link.remove();
-	}
-
-	private applyPhotoTileLayout($tile: HTMLElement, $photo: HTMLImageElement): void {
-		const width = $photo.naturalWidth;
-		const height = $photo.naturalHeight;
-
-		if (width <= 0 || height <= 0) {
-			return;
-		}
-
-		const tileClass = this.getPhotoTileClass(width, height);
-		$tile.classList.remove("portrait", "square", "landscape");
-		$tile.classList.add(tileClass);
-	}
-
-	private applyPhotoTileLayoutWhenDimensionsAreAvailable($tile: HTMLElement, $photo: HTMLImageElement): void {
-		let attempt = 0;
-		const checkDimensions = () => {
-			if ($photo.naturalWidth > 0 && $photo.naturalHeight > 0) {
-				this.applyPhotoTileLayout($tile, $photo);
-			} else if (!$photo.complete && attempt++ < 20) {
-				requestAnimationFrame(checkDimensions);
-			}
-		};
-		requestAnimationFrame(checkDimensions);
-	}
-
-	private getPhotoTileClass(width: number, height: number): PhotoTileClass {
-		const imageRatio = width / height;
-
-		return (Object.entries(UiChatMessage.TILE_RATIOS) as Array<[PhotoTileClass, number]>)
-			.map(([className, tileRatio]) => ({
-				className,
-				distance: Math.abs(Math.log(imageRatio / tileRatio)),
-			}))
-			.sort((a, b) => a.distance - b.distance)[0].className;
 	}
 
 	public get id() {
