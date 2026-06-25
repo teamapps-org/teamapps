@@ -64,10 +64,9 @@ public class MasonryGallery extends AbstractComponent {
 	}
 
 	private List<UiMasonryGalleryImage> createUiImages() {
-		return images.stream().map(image -> new UiMasonryGalleryImage()
+		return images.stream().map(image -> new UiMasonryGalleryImage(image.getImage().getUrl(getSessionContext()))
 				.setFileName(image.getFileName())
 				.setThumbnailUrl(image.getThumbnail() != null ? image.getThumbnail().getUrl(getSessionContext()) : null)
-				.setImageUrl(image.getImage() != null ? image.getImage().getUrl(getSessionContext()) : null)
 		).toList();
 	}
 
