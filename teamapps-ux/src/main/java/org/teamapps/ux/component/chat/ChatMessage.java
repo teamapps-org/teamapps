@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.chat;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.List;
@@ -33,12 +34,35 @@ public interface ChatMessage {
 
 	String getText();
 
+	default List<ChatMessageContent> getContent() {
+		if (getText() != null) {
+			return List.of(ChatMessageContent.text(getText()));
+		}
+		return List.of();
+	}
+
 	default List<ChatPhoto> getPhotos() {
 		return List.of();
 	}
 
 	default List<ChatFile> getFiles() {
 		return List.of();
+	}
+
+	default Color getBackgroundColor() {
+		return null;
+	}
+
+	default Color getBorderColor() {
+		return null;
+	}
+
+	default Color getTextColor() {
+		return null;
+	}
+
+	default String getFooter() {
+		return null;
 	}
 
 	default boolean isDeleted() {

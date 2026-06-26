@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,34 +17,37 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.teamapps.ux.component.chat;
+package org.teamapps.ux.component.masonrygallery;
 
-import java.util.List;
+import org.teamapps.ux.resolvable.Resolvable;
 
-public class ChatMessageBatch {
+import java.util.Objects;
 
-	private final List<ChatMessage> messages;
-	private final boolean containsFirstMessage;
+public class MasonryGalleryImage {
 
-	public ChatMessageBatch(List<ChatMessage> messages, boolean containsFirstMessage) {
-		this.messages = messages;
-		this.containsFirstMessage = containsFirstMessage;
+	private final String fileName;
+	private final Resolvable thumbnail;
+	private final Resolvable image;
+
+	public MasonryGalleryImage(String fileName, Resolvable image) {
+		this(fileName, null, image);
 	}
 
-	public List<ChatMessage> getMessages() {
-		return messages;
+	public MasonryGalleryImage(String fileName, Resolvable thumbnail, Resolvable image) {
+		this.fileName = fileName;
+		this.thumbnail = thumbnail;
+		this.image = Objects.requireNonNull(image, "image");
 	}
 
-	public boolean isContainsFirstMessage() {
-		return containsFirstMessage;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public Integer getEarliestMessageId() {
-		return !messages.isEmpty() ? messages.get(0).getId() : null;
+	public Resolvable getThumbnail() {
+		return thumbnail;
 	}
 
-	public boolean containsMessage(int messageId) {
-		return messages.stream().anyMatch(message -> message.getId() == messageId);
+	public Resolvable getImage() {
+		return image;
 	}
-
 }

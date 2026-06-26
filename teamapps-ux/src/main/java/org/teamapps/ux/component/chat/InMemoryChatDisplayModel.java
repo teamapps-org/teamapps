@@ -19,6 +19,7 @@
  */
 package org.teamapps.ux.component.chat;
 
+import org.teamapps.common.format.Color;
 import org.teamapps.ux.resolvable.Resolvable;
 
 import java.util.ArrayList;
@@ -65,20 +66,18 @@ public class InMemoryChatDisplayModel extends AbstractChatDisplayModel {
 	}
 
 	@Override
-	public ChatMessageBatch getPreviousMessages(Integer earliestKnownMessageId, int numberOfMessages) {
-		if (earliestKnownMessageId == null) {
-			return readFromSnapshot(chatMessages -> {
-				int startIndex = Math.max(0, chatMessages.size() - numberOfMessages);
-				return new ChatMessageBatch(chatMessages.subList(startIndex, chatMessages.size()), startIndex == 0);
-			});
-		} else {
-			return readFromSnapshot(chatMessages -> {
-				int searchResultIndex = Collections.binarySearch(chatMessages, new BinarySearchReferenceChatMessage(earliestKnownMessageId), Comparator.comparing(ChatMessage::getId));
-				int firstKnownIndex = searchResultIndex >= 0 ? searchResultIndex : -(searchResultIndex + 1);
-				int startIndex = Math.max(0, firstKnownIndex - numberOfMessages);
-				return new ChatMessageBatch(chatMessages.subList(startIndex, firstKnownIndex), startIndex == 0);
-			});
-		}
+	public ChatMessageBatch getChatMessages(Integer exclusiveStartingMessageId, Integer inclusiveAnchorMessageId, int numberOfOlderMessages) {
+		return readFromSnapshot(chatMessages -> {
+			int endIndex = exclusiveStartingMessageId != null ? findInsertionIndex(chatMessages, exclusiveStartingMessageId) : chatMessages.size();
+			int lowerBoundaryIndex = inclusiveAnchorMessageId != null ? Math.min(findInsertionIndex(chatMessages, inclusiveAnchorMessageId), endIndex) : endIndex;
+			int startIndex = Math.max(0, lowerBoundaryIndex - Math.max(0, numberOfOlderMessages));
+			return new ChatMessageBatch(chatMessages.subList(startIndex, endIndex), startIndex == 0);
+		});
+	}
+
+	private int findInsertionIndex(List<ChatMessage> chatMessages, int messageId) {
+		int searchResultIndex = Collections.binarySearch(chatMessages, new BinarySearchReferenceChatMessage(messageId), Comparator.comparing(ChatMessage::getId));
+		return searchResultIndex >= 0 ? searchResultIndex : -(searchResultIndex + 1);
 	}
 
 	public ChatMessage addMessage(Resolvable userImage, String userNickname, String text) {
@@ -86,9 +85,21 @@ public class InMemoryChatDisplayModel extends AbstractChatDisplayModel {
 	}
 
 	public ChatMessage addMessage(Resolvable userImage, String userNickname, String text, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
+		return addMessage(userImage, userNickname, text != null ? List.of(ChatMessageContent.text(text)) : List.of(), photos, files, deleted);
+	}
+
+	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted) {
+		return addMessage(userImage, userNickname, content, photos, files, deleted, null, null, null, null);
+	}
+
+	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted, String footer) {
+		return addMessage(userImage, userNickname, content, photos, files, deleted, null, null, null, footer);
+	}
+
+	public ChatMessage addMessage(Resolvable userImage, String userNickname, List<ChatMessageContent> content, List<ChatPhoto> photos, List<ChatFile> files, boolean deleted, Color backgroundColor, Color borderColor, Color textColor, String footer) {
 		ChatMessageBatch chatMessageBatch = transformList(chatMessages -> {
-			boolean firstMessage = chatMessages.size() == 0;
-			SimpleChatMessage message = new SimpleChatMessage(chatMessageIdCounter.incrementAndGet(), userImage, userNickname, text, photos, files, deleted);
+			boolean firstMessage = chatMessages.isEmpty();
+			SimpleChatMessage message = new SimpleChatMessage(chatMessageIdCounter.incrementAndGet(), userImage, userNickname, content, photos, files, deleted, backgroundColor, borderColor, textColor, footer);
 			chatMessages.add(message);
 			return new ChatMessageBatch(Collections.singletonList(message), firstMessage);
 		});
@@ -98,7 +109,7 @@ public class InMemoryChatDisplayModel extends AbstractChatDisplayModel {
 
 	public void replaceAllMessages(List<ChatMessage> messages) {
 		boolean wasChanged = transformList(chatMessages -> {
-			boolean changed = !(chatMessages.size() == 0 && messages.size() == 0);
+			boolean changed = !(chatMessages.isEmpty() && messages.isEmpty());
 			chatMessages.clear();
 			chatMessages.addAll(messages);
 			return changed;
