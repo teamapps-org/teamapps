@@ -42,11 +42,15 @@ export class UiMasonryGallery extends AbstractUiComponent<UiMasonryGalleryConfig
 	public readonly onImageClicked: TeamAppsEvent<UiMasonryGallery_ImageClickedEvent> = new TeamAppsEvent();
 
 	private readonly $main: HTMLElement;
+	private readonly $grid: HTMLElement;
 
 	constructor(config: UiMasonryGalleryConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = document.createElement("div");
 		this.$main.classList.add("UiMasonryGallery");
+		this.$grid = document.createElement("div");
+		this.$grid.classList.add("image-grid");
+		this.$main.appendChild(this.$grid);
 		this.renderImages(config.images);
 	}
 
@@ -60,7 +64,7 @@ export class UiMasonryGallery extends AbstractUiComponent<UiMasonryGalleryConfig
 	}
 
 	private renderImages(images: UiMasonryGalleryImageConfig[]): void {
-		this.$main.replaceChildren();
+		this.$grid.replaceChildren();
 		this.$main.classList.toggle("image-count-1", images.length === 1);
 
 		images.forEach((image, imageIndex) => {
@@ -81,7 +85,7 @@ export class UiMasonryGallery extends AbstractUiComponent<UiMasonryGalleryConfig
 			$image.addEventListener("load", () => this.applyTileLayout($tile, $image));
 
 			$tile.appendChild($image);
-			this.$main.appendChild($tile);
+			this.$grid.appendChild($tile);
 			const imageUrl = image.thumbnailUrl ?? image.imageUrl;
 			$image.src = imageUrl;
 			$tile.style.setProperty("--tile-image", "url('" + imageUrl + "')");

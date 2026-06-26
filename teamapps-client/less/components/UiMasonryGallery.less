@@ -18,17 +18,25 @@
  * =========================LICENSE_END==================================
  */
 .UiMasonryGallery {
-  --image-cell-size: min(174px, calc((100% - 4px) / 2));
-
-  display: grid;
-  grid-template-columns: repeat(auto-fill, var(--image-cell-size));
-  grid-auto-rows: var(--image-cell-size);
-  grid-auto-flow: dense;
-  justify-content: start;
-  gap: 4px;
+  container-type: inline-size;
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
+
+  .image-grid {
+    --image-cell-size: ~"min(174px, calc((100cqw - 4px) / 2))";
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--image-cell-size));
+    grid-auto-rows: var(--image-cell-size);
+    grid-auto-flow: dense;
+    justify-content: start;
+    align-content: start;
+    gap: 4px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
   .image-tile {
     position: relative;
@@ -87,6 +95,10 @@
 
   &.image-count-1 {
     display: block;
+
+    .image-grid {
+      display: block;
+    }
 
     .image-tile {
       display: block;
