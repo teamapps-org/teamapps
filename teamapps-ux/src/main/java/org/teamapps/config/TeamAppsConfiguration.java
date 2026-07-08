@@ -178,6 +178,10 @@ public class TeamAppsConfiguration {
 	 * <p>
 	 * If disabled (default), components stay strongly referenced by the session until it is destroyed
 	 * (historical behavior — long-lived sessions accumulate all components ever rendered).
+	 * <p>
+	 * Note: components remain strongly reachable through listener registrations they (or their event handlers)
+	 * hold on application-scoped objects such as shared models or application-wide events. For such components
+	 * to become collectable, the application must dispose/deregister those listeners when discarding the component.
 	 */
 	private boolean clientObjectGarbageCollectionEnabled = false;
 

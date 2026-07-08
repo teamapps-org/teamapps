@@ -295,6 +295,14 @@ public class ToolbarButton {
 		return this.renderedDropDownComponent;
 	}
 
+	/**
+	 * Sets the supplier for this button's drop-down content.
+	 * <p>
+	 * Note: the supplier's result is cached once rendered and reused across re-render cycles — the supplier is
+	 * NOT invoked again to produce a fresh component per render. To replace the currently displayed drop-down
+	 * content, use {@link #updateDropDownComponent(Component)}. Calling this setter (or
+	 * {@link #setDropDownComponent(Component)}) also resets the cached component.
+	 */
 	public ToolbarButton setDropDownComponentSupplier(Supplier<Component> dropDownComponentSupplier) {
 		this.dropDownComponentSupplier = dropDownComponentSupplier;
 		this.renderedDropDownComponent = null;

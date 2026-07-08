@@ -22,6 +22,7 @@ package org.teamapps.ux.session;
 import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.ext.ParamConverterProvider;
 import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -44,8 +45,10 @@ import org.teamapps.ux.component.rootpanel.RootPanel;
 import org.teamapps.ux.component.window.Window;
 import org.teamapps.ux.session.navigation.Location;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,16 +59,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 
+/**
+ * These tests rely on {@link System#gc()} actually triggering a garbage collection in order to observe
+ * weak-reference-based client object collection. They will not work (time out via Awaitility) when the JVM
+ * is run with {@code -XX:+DisableExplicitGC}.
+ */
 public class SessionContextClientObjectGcTest {
 
 	private final UiSession uiSession = Mockito.mock(UiSession.class);
+	private final List<ExecutorService> createdExecutors = new ArrayList<>();
+
+	@After
+	public void shutDownExecutors() {
+		createdExecutors.forEach(ExecutorService::shutdown); // shutdown() is idempotent — some session contexts may already have shut their executor down
+	}
 
 	private SessionContext createSessionContext(boolean clientObjectGarbageCollectionEnabled) {
 		ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(),
 				"userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
+		ExecutorService sessionExecutor = Executors.newSingleThreadExecutor();
+		createdExecutors.add(sessionExecutor);
 		return new SessionContext(
 				uiSession,
-				Executors.newSingleThreadExecutor(),
+				sessionExecutor,
 				clientInfo, SessionConfiguration.createForClientInfo(clientInfo), Mockito.mock(HttpSession.class),
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
@@ -306,7 +322,9 @@ public class SessionContextClientObjectGcTest {
 		for (int i = 0; i < 100; i++) {
 			UxTestUtil.runWithSessionContext(sessionContext, () -> rootPanel.get().setContent(new Div(new Div())));
 		}
-		assertThat(sessionContext.getClientObjectCount()).isGreaterThanOrEqualTo(200); // the leak, before collection
+		// A natural GC during the loop may already have pruned registry entries (registerClientObject drains
+		// on every render), so assert on the deterministic sum: 1 root panel + 200 Divs were registered.
+		assertThat(sessionContext.getClientObjectCount() + sessionContext.getCollectedClientObjectsCount()).isGreaterThanOrEqualTo(201);
 
 		// all discarded content (100 iterations à 2 Divs, minus the 2 still attached) must get collected
 		Awaitility.await().atMost(30, SECONDS).until(() -> {

@@ -202,13 +202,13 @@ public class SessionContext {
 				ClientObject clientObject = getClientObject(uiComponentId);
 				if (clientObject != null) {
 					Object result = clientObject.handleUiQuery(query);
-					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+					uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> {
 						resultCallback.accept(result);
 					});
 				} else if (clientObjectGarbageCollectionEnabled) {
 					// The client object may have been garbage collected (or unrendered) while the query was in flight.
 					LOGGER.warn("Returning null result for UI query {} for unknown or garbage collected client object {}", query.getUiQueryType(), uiComponentId);
-					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+					uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> {
 						resultCallback.accept(null);
 					});
 				} else {

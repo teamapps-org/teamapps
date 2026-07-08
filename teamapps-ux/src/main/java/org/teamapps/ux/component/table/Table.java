@@ -123,7 +123,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
-	private Component lastContextMenuComponent; // strong reference — displayed context menus must not get garbage collected
+	// Strong reference — displayed context menus must not get garbage collected.
+	// Deliberately retained until replaced by the next context menu or explicitly closed via closeContextMenu();
+	// a client-side dismissal does not clear it (bounded: at most one menu subtree is kept alive).
+	private Component lastContextMenuComponent;
 	private int rowBorderWidth;
 
 	public Table() {

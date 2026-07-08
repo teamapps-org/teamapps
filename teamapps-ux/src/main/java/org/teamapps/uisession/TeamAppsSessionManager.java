@@ -124,6 +124,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 							} catch (Exception e) {
 								LOGGER.error("Exception while draining collected client objects for session " + s.getUiSession().getSessionId() + "!", e);
 							}
+							// Note: the drain above updates the registry asynchronously within the session context,
+							// so these counts may lag behind by one housekeeping cycle. That is acceptable for statistics.
 							s.getUiSession().getStatistics().updateClientObjectCounts(
 									s.getSessionContext().getClientObjectCount(),
 									s.getSessionContext().getCollectedClientObjectsCount());
