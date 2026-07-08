@@ -55,6 +55,8 @@ public class ToolbarButton {
 	// ===== END HACKS =====
 
 	private Supplier<Component> dropDownComponentSupplier;
+	// strong reference to the rendered drop-down — the client caches it too, and it must not get garbage collected
+	private Component renderedDropDownComponent;
 	private boolean eagerDropDownRendering = false;
 	private int droDownPanelWidth;
 
@@ -132,7 +134,8 @@ public class ToolbarButton {
 
 		UiToolbarButton ui = new UiToolbarButton(clientId, template.createUiTemplate(), values);
 		if (this.eagerDropDownRendering && this.dropDownComponentSupplier != null) {
-			ui.setDropDownComponent(dropDownComponentSupplier.get().createUiReference());
+			this.renderedDropDownComponent = dropDownComponentSupplier.get();
+			ui.setDropDownComponent(renderedDropDownComponent.createUiReference());
 		}
 		ui.setHasDropDown(this.dropDownComponentSupplier != null);
 		ui.setDropDownPanelWidth(droDownPanelWidth > 0 ? droDownPanelWidth : 450);
@@ -219,11 +222,13 @@ public class ToolbarButton {
 
 	public ToolbarButton setDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponentSupplier = () -> dropDownComponent;
+		this.renderedDropDownComponent = null;
 		return this;
 	}
 
 	public ToolbarButton updateDropDownComponent(Component dropDownComponent) {
 		this.dropDownComponentSupplier = () -> dropDownComponent;
+		this.renderedDropDownComponent = dropDownComponent; // sent to the client right away
 		this.toolbarButtonGroup.handleDropDownComponentUpdate(this, dropDownComponent);
 		return this;
 	}
@@ -279,11 +284,20 @@ public class ToolbarButton {
 	}
 
 	/*package-private*/ Component getDropDownComponent() {
-		return this.dropDownComponentSupplier != null ? this.dropDownComponentSupplier.get() : null;
+		if (this.dropDownComponentSupplier == null) {
+			return null;
+		}
+		// cache the supplier's result: the client caches the drop-down content too (it requests it only once),
+		// so the component must stay strongly referenced
+		if (this.renderedDropDownComponent == null) {
+			this.renderedDropDownComponent = this.dropDownComponentSupplier.get();
+		}
+		return this.renderedDropDownComponent;
 	}
 
 	public ToolbarButton setDropDownComponentSupplier(Supplier<Component> dropDownComponentSupplier) {
 		this.dropDownComponentSupplier = dropDownComponentSupplier;
+		this.renderedDropDownComponent = null;
 		return this;
 	}
 

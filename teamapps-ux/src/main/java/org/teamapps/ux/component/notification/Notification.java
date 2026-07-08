@@ -97,6 +97,10 @@ public class Notification extends AbstractComponent {
 	}
 
 	public void close() {
+		// server-initiated close does not fire UI_NOTIFICATION_CLOSED back, so release the strong reference
+		// created in SessionContext.showNotification() here (the one-shot onClosed listener stays until fired once,
+		// which is harmless)
+		getSessionContext().unpinClientObject(this);
 		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
 	}
 

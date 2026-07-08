@@ -133,6 +133,9 @@ public class RunningUiSessionStats implements UiSessionStats {
 	private final RunningSumStats sentDataStats = new RunningSumStats();
 	private final RunningSumStats receivedDataStats = new RunningSumStats();
 
+	private volatile long clientObjectCount;
+	private volatile long collectedClientObjectCount;
+
 
 	public RunningUiSessionStats(long startTime, String sessionId, String name) {
 		this.startTime = startTime;
@@ -200,6 +203,21 @@ public class RunningUiSessionStats implements UiSessionStats {
 		return receivedDataStats;
 	}
 
+	@Override
+	public long getClientObjectCount() {
+		return clientObjectCount;
+	}
+
+	@Override
+	public long getCollectedClientObjectCount() {
+		return collectedClientObjectCount;
+	}
+
+	public void updateClientObjectCounts(long clientObjectCount, long collectedClientObjectCount) {
+		this.clientObjectCount = clientObjectCount;
+		this.collectedClientObjectCount = collectedClientObjectCount;
+	}
+
 	public void nameChanged(String name) {
 		this.name = name;
 	}
@@ -240,7 +258,9 @@ public class RunningUiSessionStats implements UiSessionStats {
 				queryStats.toImmutable(),
 				queryResultStats.toImmutable(),
 				sentDataStats.toImmutable(),
-				receivedDataStats.toImmutable());
+				receivedDataStats.toImmutable(),
+				clientObjectCount,
+				collectedClientObjectCount);
 	}
 
 	public void update(long totalDataSent, long totalDataReceived) {

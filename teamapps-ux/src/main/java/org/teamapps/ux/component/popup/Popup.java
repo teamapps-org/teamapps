@@ -157,6 +157,8 @@ public class Popup extends AbstractComponent {
 	}
 
 	public void close() {
+		// release the strong reference created in SessionContext.showPopup*()
+		getSessionContext().unpinClientObject(this);
 		queueCommandIfRendered(() -> new UiPopup.CloseCommand(getId()));
 	}
 }

@@ -170,6 +170,17 @@ public class TeamAppsConfiguration {
 	 */
 	private String navigationPathPrefix = "";
 
+	/**
+	 * If enabled, client objects (components) are only weakly referenced from the session's registry,
+	 * so components that are neither displayed (reachable from a root panel, shown window, popup, etc.)
+	 * nor referenced by application code get garbage collected during the session's lifetime.
+	 * Their client-side counterparts are destroyed automatically.
+	 * <p>
+	 * If disabled (default), components stay strongly referenced by the session until it is destroyed
+	 * (historical behavior — long-lived sessions accumulate all components ever rendered).
+	 */
+	private boolean clientObjectGarbageCollectionEnabled = false;
+
 	public TeamAppsConfiguration() {
 	}
 
@@ -370,5 +381,19 @@ public class TeamAppsConfiguration {
 
 	public void setNavigationPathPrefix(String navigationPathPrefix) {
 		this.navigationPathPrefix = navigationPathPrefix;
+	}
+
+	/**
+	 * @see #clientObjectGarbageCollectionEnabled
+	 */
+	public boolean isClientObjectGarbageCollectionEnabled() {
+		return clientObjectGarbageCollectionEnabled;
+	}
+
+	/**
+	 * @see #clientObjectGarbageCollectionEnabled
+	 */
+	public void setClientObjectGarbageCollectionEnabled(boolean clientObjectGarbageCollectionEnabled) {
+		this.clientObjectGarbageCollectionEnabled = clientObjectGarbageCollectionEnabled;
 	}
 }

@@ -69,6 +69,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	private final Consumer<RecordsRemovedEvent<RECORD>> modelOnRecordDeletedListener = x -> this.refresh();
 
 	private Function<RECORD, Component> contextMenuProvider = null;
+	private Component lastContextMenuComponent; // strong reference — displayed context menus must not get garbage collected
 	private int lastSeenContextMenuRequestId;
 
 	private int displayedRangeStart = 0;
@@ -148,6 +149,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 				RECORD record = itemCache.getRecordByClientId(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
+					lastContextMenuComponent = contextMenuContent; // strong reference while the context menu is displayed
 					if (contextMenuContent != null) {
 						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
@@ -311,6 +313,7 @@ public class InfiniteItemView<RECORD> extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
+		lastContextMenuComponent = null;
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
