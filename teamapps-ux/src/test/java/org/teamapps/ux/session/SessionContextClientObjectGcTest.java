@@ -26,12 +26,14 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.teamapps.dto.UiNotification;
+import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.dto.UiQuery;
 import org.teamapps.dto.UiRootPanel;
 import org.teamapps.dto.UiWindow;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
 import org.teamapps.testutil.UxTestUtil;
+import org.teamapps.uisession.TeamAppsComponentNotFoundException;
 import org.teamapps.uisession.UiCommandWithResultCallback;
 import org.teamapps.uisession.UiSession;
 import org.teamapps.ux.component.div.Div;
@@ -51,6 +53,7 @@ import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.teamapps.common.TeamAppsVersion.TEAMAPPS_VERSION;
 
 public class SessionContextClientObjectGcTest {
@@ -271,7 +274,7 @@ public class SessionContextClientObjectGcTest {
 	}
 
 	@Test
-	public void eventsAndQueriesForUnknownComponentsAreTolerated() {
+	public void eventsAndQueriesForUnknownComponentsAreToleratedWhenGcEnabled() {
 		SessionContext sessionContext = createSessionContext(true);
 
 		UxTestUtil.runWithSessionContext(sessionContext,
@@ -291,6 +294,35 @@ public class SessionContextClientObjectGcTest {
 		assertThat(result.get()).isNull();
 		// the session must not have been destroyed
 		Mockito.verify(uiSession, Mockito.never()).close(Mockito.any());
+	}
+
+	@Test
+	public void eventsAndQueriesForUnknownComponentsThrowWhenGcDisabled() {
+		SessionContext sessionContext = createSessionContext(false);
+
+		assertThatThrownBy(() -> UxTestUtil.runWithSessionContext(sessionContext,
+				() -> sessionContext.getAsUiSessionListenerInternal().onUiEvent("session-id", new UiWindow.ClosedEvent("unknown-component-id"))))
+				.isInstanceOf(FastLaneExecutionException.class)
+				.hasCauseInstanceOf(TeamAppsComponentNotFoundException.class);
+
+		UiQuery query = Mockito.mock(UiQuery.class);
+		Mockito.when(query.getComponentId()).thenReturn("unknown-component-id");
+		AtomicBoolean resultCallbackCalled = new AtomicBoolean();
+		assertThatThrownBy(() -> UxTestUtil.runWithSessionContext(sessionContext,
+				() -> sessionContext.getAsUiSessionListenerInternal().onUiQuery("session-id", query, r -> resultCallbackCalled.set(true))))
+				.isInstanceOf(FastLaneExecutionException.class)
+				.hasCauseInstanceOf(TeamAppsComponentNotFoundException.class);
+		assertThat(resultCallbackCalled).isFalse();
+	}
+
+	@Test
+	public void eventForUnknownComponentDestroysSessionWhenGcDisabled() {
+		SessionContext sessionContext = createSessionContext(false);
+
+		// not bound to the session context -> async execution path, which destroys the session on error
+		sessionContext.getAsUiSessionListenerInternal().onUiEvent("session-id", new UiWindow.ClosedEvent("unknown-component-id"));
+
+		Mockito.verify(uiSession, Mockito.timeout(10_000)).close(UiSessionClosingReason.SERVER_SIDE_ERROR);
 	}
 
 	private String renderThrowAwayComponent(SessionContext sessionContext) {

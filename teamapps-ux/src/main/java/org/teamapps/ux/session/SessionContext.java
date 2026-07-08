@@ -184,9 +184,11 @@ public class SessionContext {
 					ClientObject clientObject = getClientObject(uiComponentId);
 					if (clientObject != null) {
 						clientObject.handleUiEvent(event);
-					} else {
+					} else if (clientObjectGarbageCollectionEnabled) {
 						// The client object may have been garbage collected (or unrendered) while the event was in flight.
 						LOGGER.warn("Ignoring UI event {} for unknown or garbage collected client object {}", event.getUiEventType(), uiComponentId);
+					} else {
+						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
 					}
 				} else {
 					handleStaticEvent(event);
@@ -204,12 +206,14 @@ public class SessionContext {
 					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
 						resultCallback.accept(result);
 					});
-				} else {
+				} else if (clientObjectGarbageCollectionEnabled) {
 					// The client object may have been garbage collected (or unrendered) while the query was in flight.
 					LOGGER.warn("Returning null result for UI query {} for unknown or garbage collected client object {}", query.getUiQueryType(), uiComponentId);
 					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
 						resultCallback.accept(null);
 					});
+				} else {
+					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
 				}
 			});
 		}
