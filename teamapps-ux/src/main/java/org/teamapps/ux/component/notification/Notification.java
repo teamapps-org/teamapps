@@ -36,7 +36,6 @@ public class Notification extends AbstractComponent {
 	public final Event<Boolean> onClosed = new Event<>();
 
 	private boolean showing;
-	private boolean pinnedWhileShowing;
 
 	private Color backgroundColor = null;
 	private Spacing padding = null;
@@ -91,37 +90,16 @@ public class Notification extends AbstractComponent {
 			}
 			case UI_NOTIFICATION_CLOSED: {
 				this.showing = false;
-				unpinAfterClose();
+				releaseDisplayPin();
 				onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
 				break;
 			}
 		}
 	}
 
-	/**
-	 * Internal API, used by {@link org.teamapps.ux.session.SessionContext#showNotification}, do not call from application code!
-	 * <p>
-	 * Pins this notification in its session context while it is showing, so it does not get garbage collected even if
-	 * the application does not keep a reference to it. Idempotent until the notification closes and releases the pin,
-	 * whether server-initiated ({@link #close()}) or client-initiated (UI_NOTIFICATION_CLOSED).
-	 */
-	public void pinWhileShowing() {
-		if (!pinnedWhileShowing) {
-			pinnedWhileShowing = true;
-			getSessionContext().pinClientObject(this);
-		}
-	}
-
-	private void unpinAfterClose() {
-		if (pinnedWhileShowing) {
-			pinnedWhileShowing = false;
-			getSessionContext().unpinClientObject(this);
-		}
-	}
-
 	public void close() {
 		// server-initiated close does not fire UI_NOTIFICATION_CLOSED back, so release the pin here
-		unpinAfterClose();
+		releaseDisplayPin();
 		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
 	}
 

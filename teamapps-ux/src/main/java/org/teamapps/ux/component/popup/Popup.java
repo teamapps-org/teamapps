@@ -42,7 +42,6 @@ public class Popup extends AbstractComponent {
 	private Color dimmingColor = new RgbaColor(0, 0, 0, .2f);
 	private boolean closeOnEscape; // close if the user presses escape
 	private boolean closeOnClickOutside; // close if the user clicks onto the area outside the window
-	private boolean pinnedWhileShowing;
 
 	public Popup(Component contentComponent) {
 		this.contentComponent = contentComponent;
@@ -161,28 +160,10 @@ public class Popup extends AbstractComponent {
 		// queueCommandIfRendered(() -> new UiPopup.SetCloseOnClickOutsideCommand(getId(), closeOnClickOutside));
 	}
 
-	/**
-	 * Pins this popup in its session context while it is showing (called by {@link org.teamapps.ux.session.SessionContext#showPopup(Popup)}
-	 * and {@link org.teamapps.ux.session.SessionContext#showPopupAtCurrentMousePosition(Popup)}).
-	 * Idempotent until {@link #close()} releases the pin.
-	 */
-	public void pinWhileShowing() {
-		if (!pinnedWhileShowing) {
-			pinnedWhileShowing = true;
-			getSessionContext().pinClientObject(this);
-		}
-	}
-
 	public void close() {
-		unpinAfterClose();
+		// release the strong reference created when the popup was shown
+		releaseDisplayPin();
 		queueCommandIfRendered(() -> new UiPopup.CloseCommand(getId()));
-	}
-
-	private void unpinAfterClose() {
-		if (pinnedWhileShowing) {
-			pinnedWhileShowing = false;
-			getSessionContext().unpinClientObject(this);
-		}
 	}
 
 	@Override
@@ -190,7 +171,7 @@ public class Popup extends AbstractComponent {
 		switch (event.getUiEventType()) {
 			case UI_POPUP_CLOSED -> {
 				// user-initiated close (escape, click outside) — release the strong reference created in SessionContext.showPopup*()
-				unpinAfterClose();
+				releaseDisplayPin();
 				onClosed.fire();
 			}
 		}

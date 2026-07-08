@@ -631,12 +631,12 @@ public class SessionContext {
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
-		popup.pinWhileShowing(); // unpinned in Popup.close()
+		popup.pinWhileDisplayed(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
 	}
 
 	public void showPopup(Popup popup) {
-		popup.pinWhileShowing(); // unpinned in Popup.close()
+		popup.pinWhileDisplayed(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
@@ -842,7 +842,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			notification.pinWhileShowing(); // unpinned when the notification closes (Notification.close() or client-side close event)
+			notification.pinWhileDisplayed(); // unpinned when the notification closes (Notification.close() or client-side close event)
 			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
