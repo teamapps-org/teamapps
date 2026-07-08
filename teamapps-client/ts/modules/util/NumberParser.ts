@@ -68,7 +68,13 @@ export class NumberParser {
 	}
 
 	public static getDecimalSeparatorForFormat(format: Intl.NumberFormat) {
-		const parts: any[] = (format as any).formatToParts(5.6); // TODO add types once typescript has this
-		return parts.find(d => d.type === "decimal")?.value ?? '.';
+		const locale = format.resolvedOptions().locale;
+		const decimalPart = new Intl.NumberFormat(locale, {
+			minimumFractionDigits: 1,
+			maximumFractionDigits: 1,
+		})
+			.formatToParts(1.1)
+			.find((part) => part.type === "decimal");
+		return decimalPart?.value ?? ".";
 	}
 }

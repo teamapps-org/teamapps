@@ -44,7 +44,6 @@ export class UiCurrencyField extends UiField<UiCurrencyFieldConfig, UiCurrencyVa
 
 	private trivialUnitBox: TrivialUnitBox<UiCurrencyUnitConfig>;
 	private queryFunction: QueryFunction<UiCurrencyUnitConfig>;
-	private numberFormat: Intl.NumberFormat;
 
 	protected initialize(config: UiCurrencyFieldConfig, context: TeamAppsUiContext) {
 		let initialPrecision = config.fixedPrecision >= 0 ? config.fixedPrecision : 2;
