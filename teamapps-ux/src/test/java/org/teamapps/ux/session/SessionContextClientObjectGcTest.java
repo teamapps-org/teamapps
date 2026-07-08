@@ -224,6 +224,52 @@ public class SessionContextClientObjectGcTest {
 	}
 
 	@Test
+	public void repeatedServerSideShowAndCloseDoesNotAccumulateOnClosedListeners() throws Exception {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<Notification> notificationRef = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> notificationRef.set(new Notification(new Div())));
+		Notification notification = notificationRef.get();
+		int listenerCountBefore = listenerCount(notification.onClosed);
+
+		for (int i = 0; i < 5; i++) {
+			UxTestUtil.runWithSessionContext(sessionContext, () -> {
+				sessionContext.showNotification(notification, NotificationPosition.TOP_RIGHT);
+				notification.close();
+			});
+		}
+
+		assertThat(listenerCount(notification.onClosed)).isEqualTo(listenerCountBefore);
+	}
+
+	@Test
+	public void notificationShownAgainAfterCloseIsPinnedAgainAndCollectableAfterFinalClose() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Notification notification = new Notification(new Div());
+			id.set(notification.getId());
+			sessionContext.showNotification(notification, NotificationPosition.TOP_RIGHT);
+			notification.close();
+			sessionContext.showNotification(notification, NotificationPosition.TOP_RIGHT);
+		});
+
+		// pinned while showing (second show), although the application holds no reference
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull();
+
+		// client-side close unpins again
+		UxTestUtil.runWithSessionContext(sessionContext,
+				() -> ((Notification) sessionContext.getClientObject(id.get())).handleUiEvent(new UiNotification.ClosedEvent(id.get(), true)));
+		awaitCollected(sessionContext, id.get());
+	}
+
+	private static int listenerCount(org.teamapps.event.Event<?> event) throws Exception {
+		java.lang.reflect.Method getListeners = org.teamapps.event.Event.class.getDeclaredMethod("getListeners");
+		getListeners.setAccessible(true);
+		return ((List<?>) getListeners.invoke(event)).size();
+	}
+
+	@Test
 	public void explicitlyUnrenderedComponentDoesNotGetDestroyedTwice() {
 		SessionContext sessionContext = createSessionContext(true);
 		AtomicReference<String> id = new AtomicReference<>();

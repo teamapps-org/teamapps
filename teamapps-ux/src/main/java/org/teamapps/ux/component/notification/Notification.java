@@ -37,6 +37,9 @@ public class Notification extends AbstractComponent {
 
 	private boolean showing;
 
+	// whether this notification is currently strongly referenced (pinned) by the session context, see pinUntilClosed()
+	private boolean pinned;
+
 	private Color backgroundColor = null;
 	private Spacing padding = null;
 	private int displayTimeInMillis = 3000;
@@ -90,17 +93,38 @@ public class Notification extends AbstractComponent {
 			}
 			case UI_NOTIFICATION_CLOSED: {
 				this.showing = false;
+				unpinIfPinned();
 				onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
 				break;
 			}
 		}
 	}
 
+	/**
+	 * Internal API, used by {@link org.teamapps.ux.session.SessionContext#showNotification}, do not call from application code!
+	 * <p>
+	 * Strongly references this notification from the session context while it is showing, so it does not get garbage
+	 * collected even if the application does not keep a reference to it. Idempotent: pins at most once until the next
+	 * close, whether server-initiated ({@link #close()}) or client-initiated (UI_NOTIFICATION_CLOSED).
+	 */
+	public void pinUntilClosed() {
+		if (!pinned) {
+			pinned = true;
+			getSessionContext().pinClientObject(this);
+		}
+	}
+
+	private void unpinIfPinned() {
+		if (pinned) {
+			pinned = false;
+			getSessionContext().unpinClientObject(this);
+		}
+	}
+
 	public void close() {
 		// server-initiated close does not fire UI_NOTIFICATION_CLOSED back, so release the strong reference
-		// created in SessionContext.showNotification() here (the one-shot onClosed listener stays until fired once,
-		// which is harmless)
-		getSessionContext().unpinClientObject(this);
+		// created by pinUntilClosed() here
+		unpinIfPinned();
 		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
 	}
 

@@ -29,7 +29,6 @@ import org.teamapps.common.format.RgbaColor;
 import org.teamapps.dto.*;
 import org.teamapps.event.Disposable;
 import org.teamapps.event.Event;
-import org.teamapps.event.SelfDisposingEventListener;
 import org.teamapps.icons.Icon;
 import org.teamapps.icons.SessionIconProvider;
 import org.teamapps.server.UxServerContext;
@@ -835,11 +834,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			pinClientObject(notification);
-			notification.onClosed.addListener((SelfDisposingEventListener<Boolean>) (byUser, disposable) -> {
-				unpinClientObject(notification);
-				disposable.dispose();
-			});
+			notification.pinUntilClosed(); // unpinned in Notification.close() or on UI_NOTIFICATION_CLOSED
 			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
