@@ -22,15 +22,22 @@ import {AbstractUiComponent} from "./AbstractUiComponent";
 import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {UiComponent} from "./UiComponent";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
-import {UiPopupCommandHandler, UiPopupConfig} from "../generated/UiPopupConfig";
+import {UiPopup_ClosedEvent, UiPopupCommandHandler, UiPopupConfig, UiPopupEventSource} from "../generated/UiPopupConfig";
 import {parseHtml} from "./Common";
 import {executeWhenFirstDisplayed} from "./util/ExecuteWhenFirstDisplayed";
+import {TeamAppsEvent} from "./util/TeamAppsEvent";
+import {keyCodes} from "./trivial-components/TrivialCore";
 
-export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPopupCommandHandler {
+export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPopupCommandHandler, UiPopupEventSource {
+
+	public readonly onClosed: TeamAppsEvent<UiPopup_ClosedEvent> = new TeamAppsEvent();
 
 	private contentComponent: UiComponent;
 	private $main: HTMLElement;
 	private $componentWrapper: HTMLElement;
+
+	private escapeKeyListener: (e: KeyboardEvent) => void;
+	private clickOutsideListener: (e: MouseEvent) => void;
 
 	constructor(config: UiPopupConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -47,6 +54,34 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 		this.setBackgroundColor(config.backgroundColor);
 		this.setDimmingColor(config.dimmingColor);
 		this.setDimensions(config.width, config.height);
+
+		this.escapeKeyListener = (e) => {
+			if (this._config.closeOnEscape && e.keyCode === keyCodes.escape) {
+				this.closeByUser();
+			}
+		};
+		document.body.addEventListener("keydown", this.escapeKeyListener, {capture: true});
+
+		this.clickOutsideListener = (e) => {
+			if (this._config.closeOnClickOutside && e.target === this.$main) {
+				this.closeByUser();
+			}
+		};
+		this.$main.addEventListener("click", this.clickOutsideListener);
+	}
+
+	private removeEventListeners() {
+		if (this.escapeKeyListener) {
+			document.body.removeEventListener("keydown", this.escapeKeyListener, {capture: true});
+		}
+		if (this.clickOutsideListener) {
+			this.$main.removeEventListener("click", this.clickOutsideListener);
+		}
+	}
+
+	private closeByUser() {
+		this.close();
+		this.onClosed.fire({});
 	}
 
 	doGetMainElement(): HTMLElement {
@@ -112,7 +147,13 @@ export class UiPopup extends AbstractUiComponent<UiPopupConfig> implements UiPop
 	}
 
 	close(): void {
+		this.removeEventListeners();
 		this.getMainElement().remove();
+	}
+
+	public destroy(): void {
+		super.destroy();
+		this.removeEventListeners();
 	}
 }
 

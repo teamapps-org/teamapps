@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.teamapps.dto.UiNotification;
+import org.teamapps.dto.UiPopup;
 import org.teamapps.dto.UiSessionClosingReason;
 import org.teamapps.dto.UiQuery;
 import org.teamapps.dto.UiRootPanel;
@@ -218,6 +219,50 @@ public class SessionContextClientObjectGcTest {
 		assertThat(sessionContext.getClientObject(id.get())).isNotNull();
 
 		UxTestUtil.runWithSessionContext(sessionContext, () -> ((Popup) sessionContext.getClientObject(id.get())).close());
+		awaitCollected(sessionContext, id.get());
+	}
+
+	@Test
+	public void shownPopupIsCollectableAfterClientSideClose() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Popup popup = new Popup(new Div());
+			sessionContext.showPopup(popup);
+			id.set(popup.getId());
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull();
+
+		AtomicBoolean onClosedFired = new AtomicBoolean();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Popup popup = (Popup) sessionContext.getClientObject(id.get());
+			popup.onClosed.addListener(() -> onClosedFired.set(true));
+			popup.handleUiEvent(new UiPopup.ClosedEvent(id.get()));
+		});
+		assertThat(onClosedFired).isTrue();
+		awaitCollected(sessionContext, id.get());
+	}
+
+	@Test
+	public void popupServerSideCloseAfterClientSideCloseIsHarmless() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Popup popup = new Popup(new Div());
+			sessionContext.showPopup(popup);
+			id.set(popup.getId());
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull();
+
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Popup popup = (Popup) sessionContext.getClientObject(id.get());
+			popup.handleUiEvent(new UiPopup.ClosedEvent(id.get()));
+			popup.close(); // double unpin must not throw
+		});
 		awaitCollected(sessionContext, id.get());
 	}
 

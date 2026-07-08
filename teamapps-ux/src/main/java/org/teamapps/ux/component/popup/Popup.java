@@ -22,11 +22,15 @@ package org.teamapps.ux.component.popup;
 import org.teamapps.common.format.RgbaColor;
 import org.teamapps.common.format.Color;
 import org.teamapps.dto.UiComponent;
+import org.teamapps.dto.UiEvent;
 import org.teamapps.dto.UiPopup;
+import org.teamapps.event.Event;
 import org.teamapps.ux.component.AbstractComponent;
 import org.teamapps.ux.component.Component;
 
 public class Popup extends AbstractComponent {
+
+	public final Event<Void> onClosed = new Event<>();
 
 	private Component contentComponent;
 	private int x;
@@ -170,11 +174,25 @@ public class Popup extends AbstractComponent {
 	}
 
 	public void close() {
+		unpinAfterClose();
+		queueCommandIfRendered(() -> new UiPopup.CloseCommand(getId()));
+	}
+
+	private void unpinAfterClose() {
 		if (pinnedWhileShowing) {
-			// release the strong reference created when the popup was shown
 			pinnedWhileShowing = false;
 			getSessionContext().unpinClientObject(this);
 		}
-		queueCommandIfRendered(() -> new UiPopup.CloseCommand(getId()));
+	}
+
+	@Override
+	public void handleUiEvent(UiEvent event) {
+		switch (event.getUiEventType()) {
+			case UI_POPUP_CLOSED -> {
+				// user-initiated close (escape, click outside) — release the strong reference created in SessionContext.showPopup*()
+				unpinAfterClose();
+				onClosed.fire();
+			}
+		}
 	}
 }
