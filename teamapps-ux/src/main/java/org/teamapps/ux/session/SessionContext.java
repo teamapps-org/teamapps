@@ -135,8 +135,12 @@ public class SessionContext {
 	 */
 	private final Set<ClientObject> pinnedClientObjects = Collections.newSetFromMap(new IdentityHashMap<>());
 	/**
-	 * Strong references to components attached as root panels ({@link #addRootPanel(String, Component)}). Never released
-	 * (there is no API for removing a root panel).
+	 * Strong references to components attached as root panels ({@link #addRootPanel(String, Component)}). Deliberately
+	 * accumulating and never released: the client-side {@code UiRootPanel.buildRootPanel} <i>appends</i> the root
+	 * panel to the container element, so every attached root component stays displayed for the rest of the session
+	 * (there is no API for removing or replacing a root panel). In particular, this must not be keyed by container
+	 * selector: adding a second root panel for the same selector displays both, so releasing the first one would let
+	 * it be garbage collected and its still-visible client-side counterpart destroyed.
 	 */
 	private final List<Component> attachedRootComponents = new ArrayList<>();
 	private volatile long collectedClientObjectsCount; // written within the session context, read by the housekeeping thread

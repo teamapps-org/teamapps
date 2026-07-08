@@ -131,6 +131,26 @@ public class SessionContextClientObjectGcTest {
 	}
 
 	@Test
+	public void allRootPanelsForTheSameSelectorStayReferenced() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> firstId = new AtomicReference<>();
+		AtomicReference<String> secondId = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			firstId.set(sessionContext.addRootPanel().getId()); // container selector "body"
+			secondId.set(sessionContext.addRootPanel().getId()); // same selector: the client appends, displaying both
+		});
+
+		attemptGc(sessionContext);
+
+		// UiRootPanel.buildRootPanel appends to the container element, so both root panels remain displayed
+		// and must both stay strongly referenced (see SessionContext#attachedRootComponents)
+		assertThat(sessionContext.getClientObject(firstId.get())).isNotNull();
+		assertThat(sessionContext.getClientObject(secondId.get())).isNotNull();
+		assertThat(destroyCommandsSentFor(firstId.get())).isEmpty();
+		assertThat(destroyCommandsSentFor(secondId.get())).isEmpty();
+	}
+
+	@Test
 	public void shownWindowIsPinnedAndCollectableAfterServerSideClose() {
 		SessionContext sessionContext = createSessionContext(true);
 		AtomicReference<String> id = new AtomicReference<>();
