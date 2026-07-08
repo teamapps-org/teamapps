@@ -45,6 +45,7 @@ public class Window extends Panel {
 	private boolean closeable;
 	private boolean closeOnEscape;
 	private boolean closeOnClickOutside;
+	private boolean pinnedWhileShowing;
 
 	public Window() {
 	}
@@ -98,7 +99,7 @@ public class Window extends Panel {
 		switch (event.getUiEventType()) {
 			case UI_WINDOW_CLOSED -> {
 				// user-initiated close (close button, escape, click outside) — release the strong reference created in show()
-				getSessionContext().unpinClientObject(this);
+				unpinAfterClose();
 				onClosed.fire();
 			}
 		}
@@ -196,7 +197,10 @@ public class Window extends Panel {
 	}
 
 	public void show(int animationDuration) {
-		getSessionContext().pinClientObject(this); // shown windows must not get garbage collected; unpinned on close
+		if (!pinnedWhileShowing) {
+			pinnedWhileShowing = true;
+			getSessionContext().pinClientObject(this); // shown windows must not get garbage collected; unpinned on close
+		}
 		render();
 		queueCommandIfRendered(() -> new UiWindow.ShowCommand(getId(), animationDuration));
 	}
@@ -207,8 +211,15 @@ public class Window extends Panel {
 
 	public void close(int animationDuration) {
 		// server-initiated close does not fire UI_WINDOW_CLOSED back, so unpin here
-		getSessionContext().unpinClientObject(this);
+		unpinAfterClose();
 		queueCommandIfRendered(() -> new UiWindow.CloseCommand(getId(), animationDuration));
+	}
+
+	private void unpinAfterClose() {
+		if (pinnedWhileShowing) {
+			pinnedWhileShowing = false;
+			getSessionContext().unpinClientObject(this);
+		}
 	}
 
 	public boolean isCloseable() {

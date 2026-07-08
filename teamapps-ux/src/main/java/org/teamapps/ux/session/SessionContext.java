@@ -130,9 +130,12 @@ public class SessionContext {
 	private final ReferenceQueue<ClientObject> collectedClientObjectsQueue = new ReferenceQueue<>();
 	/**
 	 * Strong references to client objects that are displayed without necessarily being referenced by application code:
-	 * shown windows, popups, notifications, context menus etc. Mutated only within the session context.
+	 * shown windows, popups, notifications etc. Reference-counted: {@link #pinClientObject(ClientObject)} increments,
+	 * {@link #unpinClientObject(ClientObject)} decrements and removes the entry when the count reaches zero, so an
+	 * object pinned for multiple independent reasons stays pinned until every reason released it.
+	 * Mutated only within the session context.
 	 */
-	private final Set<ClientObject> pinnedClientObjects = Collections.newSetFromMap(new IdentityHashMap<>());
+	private final Map<ClientObject, Integer> pinnedClientObjects = new IdentityHashMap<>();
 	/**
 	 * Strong references to components attached as root panels ({@link #addRootPanel(String, Component)}). Deliberately
 	 * accumulating and never released: the client-side {@code UiRootPanel.buildRootPanel} <i>appends</i> the root
@@ -628,12 +631,12 @@ public class SessionContext {
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
-		pinClientObject(popup); // unpinned in Popup.close()
+		popup.pinWhileShowing(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
 	}
 
 	public void showPopup(Popup popup) {
-		pinClientObject(popup); // unpinned in Popup.close()
+		popup.pinWhileShowing(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
@@ -663,11 +666,12 @@ public class SessionContext {
 		drainCollectedClientObjects();
 		clientObjectsById.put(clientObject.getId(), new ClientObjectWeakReference(clientObject, collectedClientObjectsQueue));
 		if (!clientObjectGarbageCollectionEnabled) {
-			pinnedClientObjects.add(clientObject);
+			pinnedClientObjects.putIfAbsent(clientObject, 1);
 		}
 	}
 
 	public void unregisterClientObject(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
 		ClientObjectWeakReference reference = clientObjectsById.get(clientObject.getId());
 		if (reference != null && reference.get() == clientObject) {
 			clientObjectsById.remove(clientObject.getId());
@@ -685,15 +689,19 @@ public class SessionContext {
 	 * (see {@link org.teamapps.config.TeamAppsConfiguration#setClientObjectGarbageCollectionEnabled(boolean)}).
 	 * Use this for client objects that must stay alive while displayed although application code may not reference them,
 	 * e.g. custom components sending {@link ClientObject#createUiReference()} of temporary objects.
+	 * Pins are reference-counted: pinning the same object multiple times requires the same number of
+	 * {@link #unpinClientObject(ClientObject)} calls to release it.
 	 * Must be invoked with this session context bound to the current thread.
 	 */
 	public void pinClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
-		pinnedClientObjects.add(clientObject);
+		pinnedClientObjects.merge(clientObject, 1, Integer::sum);
 	}
 
 	/**
-	 * Releases a strong reference created by {@link #pinClientObject(ClientObject)}.
+	 * Releases one strong reference (pin) created by {@link #pinClientObject(ClientObject)}. The object stays pinned
+	 * until every pin has been released. Unpinning an object that is not pinned is a no-op, so it never releases
+	 * pins held for other reasons.
 	 * Must be invoked with this session context bound to the current thread.
 	 */
 	public void unpinClientObject(ClientObject clientObject) {
@@ -703,7 +711,7 @@ public class SessionContext {
 			// is destroyed (exact historical behavior)
 			return;
 		}
-		pinnedClientObjects.remove(clientObject);
+		pinnedClientObjects.computeIfPresent(clientObject, (o, count) -> count > 1 ? count - 1 : null);
 	}
 
 	/**
@@ -834,7 +842,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
-			notification.pinUntilClosed(); // unpinned in Notification.close() or on UI_NOTIFICATION_CLOSED
+			notification.pinWhileShowing(); // unpinned when the notification closes (Notification.close() or client-side close event)
 			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});

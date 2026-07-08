@@ -389,6 +389,81 @@ public class SessionContextClientObjectGcTest {
 		Mockito.verify(uiSession, Mockito.timeout(10_000)).close(UiSessionClosingReason.SERVER_SIDE_ERROR);
 	}
 
+	@Test
+	public void doublePinnedObjectStaysPinnedUntilUnpinnedTwice() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Div div = new Div();
+			div.render();
+			id.set(div.getId());
+			sessionContext.pinClientObject(div);
+			sessionContext.pinClientObject(div);
+			sessionContext.unpinClientObject(div);
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull(); // one pin left
+
+		UxTestUtil.runWithSessionContext(sessionContext, () -> sessionContext.unpinClientObject(sessionContext.getClientObject(id.get())));
+		awaitCollected(sessionContext, id.get());
+	}
+
+	@Test
+	public void unpinWithoutPinDoesNotStealSubsequentPins() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Div div = new Div();
+			div.render();
+			id.set(div.getId());
+			sessionContext.unpinClientObject(div); // spurious unpin must be a no-op, not a negative count
+			sessionContext.pinClientObject(div);
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull();
+	}
+
+	@Test
+	public void windowCloseFollowedByClientClosedEventDoesNotUnderflowPinning() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Window window = new Window();
+			window.show(0);
+			id.set(window.getId());
+			window.close(0); // server-side close unpins
+			window.handleUiEvent(new UiWindow.ClosedEvent(window.getId())); // racing client close event must not unpin again
+			window.show(0); // re-shown once -> exactly one pin
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull(); // re-shown window must stay pinned
+
+		UxTestUtil.runWithSessionContext(sessionContext, () -> ((Window) sessionContext.getClientObject(id.get())).close(0));
+		awaitCollected(sessionContext, id.get());
+	}
+
+	@Test
+	public void shownPopupWithAdditionalApplicationPinSurvivesClose() {
+		SessionContext sessionContext = createSessionContext(true);
+		AtomicReference<String> id = new AtomicReference<>();
+		UxTestUtil.runWithSessionContext(sessionContext, () -> {
+			Popup popup = new Popup(new Div());
+			sessionContext.showPopup(popup);
+			sessionContext.pinClientObject(popup); // independent second pin reason
+			id.set(popup.getId());
+			popup.close(); // releases only the show-pin
+		});
+
+		attemptGc(sessionContext);
+		assertThat(sessionContext.getClientObject(id.get())).isNotNull(); // application pin must still hold
+
+		UxTestUtil.runWithSessionContext(sessionContext, () -> sessionContext.unpinClientObject(sessionContext.getClientObject(id.get())));
+		awaitCollected(sessionContext, id.get());
+	}
+
 	private String renderThrowAwayComponent(SessionContext sessionContext) {
 		AtomicReference<String> id = new AtomicReference<>();
 		UxTestUtil.runWithSessionContext(sessionContext, () -> {
