@@ -53,14 +53,11 @@ import java.util.function.Function;
 public class Event<EVENT_DATA> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Event.class);
-	private final String source; // for debugging
 
 	private final List<Consumer<EVENT_DATA>> listeners = new CopyOnWriteArrayList<>();
 	private EVENT_DATA lastEventData;
 
 	public Event() {
-		StackTraceElement stackTraceElement = new Exception().getStackTrace()[1];
-		this.source = stackTraceElement.getFileName() + stackTraceElement.getLineNumber();
 	}
 
 	public Disposable addListener(Consumer<EVENT_DATA> listener) {
