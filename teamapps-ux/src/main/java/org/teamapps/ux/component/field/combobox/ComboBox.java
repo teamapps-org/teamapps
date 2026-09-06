@@ -36,6 +36,30 @@ import org.teamapps.ux.model.ComboBoxModel;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A combo box is a drop-down list which can be expanded by pressing a button. It includes a text field
+ * where the user can type in a search term. The list element chosen by the user is then shown in that field.
+ *
+ * A combo box instance can either be created using the constructor or the overloaded {@link #createForList(List)} method
+ * or the {@link #createForEnum(Class)} method if the constants of an Enum class should be displayed.
+ * In all cases of the create functions, a {@link ComboBoxModel} is implemented. Its {@link ComboBoxModel#getRecords(String)}
+ * function matches a query string to the string representation of the records as defined by the function returned by
+ * {@link #getRecordToStringFunction()}. The toString() method of the RECORD class is the default.
+ * A combo box can also display hierarchical data where the {@link ComboBoxModel#getTreeNodeInfo(Object)} returns
+ * a TreeNodeInfo object containing i.a. information about the identity of the parent of the input object.
+ *
+ * The way a record is displayed in the drop-down list is highly configurable. Templates serve as placeholders for
+ * properties that are displayed in a defined way. One template can be universally set for all records using the
+ * {@link #setTemplate(Template)} function or it can be different for the records in the drop-down list
+ * ({@link #setDropDownTemplate(Template)}) and the record selected by the user ({@link #setSelectedEntryTemplate(Template)}.
+ * The choice of template for a record can be further specified by implementing a {@link TemplateDecider} and setting
+ * it via {@link #setTemplateDecider(TemplateDecider)}, {@link #setSelectedEntryTemplateDecider(TemplateDecider)} or
+ * {@link #setDropdownTemplateDecider(TemplateDecider)}.
+ *
+ * The {@link org.teamapps.data.extract.PropertyProvider} or its specification, the PropertyExtractor, are used to map
+ * the template's property names to object specific information, e.g. its attributes, that should represent the record
+ * in the combo box.
+ */
 public class ComboBox<RECORD> extends AbstractComboBox<RECORD, RECORD> implements TextInputHandlingField {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComboBox.class);
