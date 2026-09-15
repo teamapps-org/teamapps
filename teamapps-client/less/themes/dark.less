@@ -31,25 +31,30 @@
 @ta-dark-state-primary-bg:               @ta-dark-color-primary;
 @ta-dark-state-primary-border:           darken(spin(@ta-dark-text-color, -10), 5%);
 
-@ta-dark-state-success-text:             @ta-dark-text-color;
-@ta-dark-state-success-text-emphasis:    average(@ta-dark-text-color, @ta-dark-color-success);
-@ta-dark-state-success-bg:               @ta-dark-color-success;
-@ta-dark-state-success-border:           darken(spin(@ta-dark-state-success-bg, -10), 5%);
+@ta-dark-state-success-text:             #c8e6c9;
+@ta-dark-state-success-text-emphasis:    lighten(@ta-dark-state-success-text, 5%);
+@ta-dark-state-success-bg:               #233d30;
+@ta-dark-state-success-border:           #81c784;
 
-@ta-dark-state-info-text:                @ta-dark-text-color;
-@ta-dark-state-info-text-emphasis:       average(@ta-dark-text-color, @ta-dark-color-info);
-@ta-dark-state-info-bg:                  @ta-dark-color-info;
-@ta-dark-state-info-border:              darken(spin(@ta-dark-state-info-bg, -10), 7%);
+@ta-dark-state-info-text:                #bbdefb;
+@ta-dark-state-info-text-emphasis:       lighten(@ta-dark-state-info-text, 5%);
+@ta-dark-state-info-bg:                  #20394f;
+@ta-dark-state-info-border:              #64b5f6;
 
-@ta-dark-state-warning-text:             @ta-dark-text-color;
-@ta-dark-state-warning-text-emphasis:    average(@ta-dark-text-color, @ta-dark-color-warning);
-@ta-dark-state-warning-bg:               @ta-dark-color-warning;
-@ta-dark-state-warning-border:           darken(spin(@ta-dark-state-warning-bg, -10), 20%);
+@ta-dark-state-warning-text:             #ffe0b2;
+@ta-dark-state-warning-text-emphasis:    lighten(@ta-dark-state-warning-text, 5%);
+@ta-dark-state-warning-bg:               #493720;
+@ta-dark-state-warning-border:           #ffb74d;
 
-@ta-dark-state-danger-text:              @ta-dark-text-color;
-@ta-dark-state-danger-text-emphasis:     average(@ta-dark-text-color, @ta-dark-color-danger);
-@ta-dark-state-danger-bg:                @ta-dark-color-danger;
-@ta-dark-state-danger-border:            darken(spin(@ta-dark-state-danger-bg, -10), 5%);
+@ta-dark-state-danger-text:              #ffcdd2;
+@ta-dark-state-danger-text-emphasis:     lighten(@ta-dark-state-danger-text, 5%);
+@ta-dark-state-danger-bg:                #492c32;
+@ta-dark-state-danger-border:            #e57373;
+
+@ta-dark-state-neutral-text:             #e0e0e0;
+@ta-dark-state-neutral-text-emphasis:    #f3f3f3;
+@ta-dark-state-neutral-bg:               #343b46;
+@ta-dark-state-neutral-border:           #90a4ae;
 
 @dark-text-color: #f3f3f3;
 @dark-background-color: rgba(50, 50, 65, .93);
@@ -90,6 +95,11 @@
   --ta-state-danger-text-emphasis:     @ta-dark-state-danger-text-emphasis;
   --ta-state-danger-bg:                @ta-dark-state-danger-bg;
   --ta-state-danger-border:            @ta-dark-state-danger-border;
+
+  --ta-state-neutral-text:            @ta-dark-state-neutral-text;
+  --ta-state-neutral-text-emphasis:   @ta-dark-state-neutral-text-emphasis;
+  --ta-state-neutral-bg:              @ta-dark-state-neutral-bg;
+  --ta-state-neutral-border:          @ta-dark-state-neutral-border;
 
   --ta-text-color: @dark-text-color;
   --ta-text-color-faded: fadeout(@dark-text-color, 30%);
