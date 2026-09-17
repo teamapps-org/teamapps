@@ -29,10 +29,21 @@ class UiMobileLayout extends UiComponent {
 	UiToolbar* toolbar;
 	UiComponent* initialView;
 	UiNavigationBar* navigationBar;
+	UiMobileNavigationState navigationState; // optional; existing layouts retain their behavior
 
 	command setToolbar(UiToolbar* toolbar); // null removes the toolbar
 	command setNavigationBar(UiNavigationBar* navBar); // null removes the navigation bar
 	command showView(UiComponent* component, UiPageTransition animation, int animationDuration);
+	command setNavigationState(UiMobileNavigationState state);
+	event navigationRequested(int revision, String entry);
+}
+
+class UiMobileNavigationState {
+	int revision;
+	List<String> entries;
+	String currentEntry;
+	boolean browserHistory;
+	boolean edgeSwipes;
 }
 
 interface Emptyable {

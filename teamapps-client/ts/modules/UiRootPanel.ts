@@ -17,6 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
+import {mobileNavigationHistory} from "./util/MobileNavigationHistory";
 import * as moment from "moment-timezone";
 
 import {UiComponentConfig} from "../generated/UiComponentConfig";
@@ -475,6 +476,7 @@ function setGlobalKeyEventsEnabled(unmodified: boolean, modifiedWithAltKey: bool
 }
 
 window.addEventListener('popstate', (event) => {
+	if (mobileNavigationHistory.handlePopState(event.state)) return;
 	UiRootPanel.onNavigationStateChange.fire({
 		location: createUiLocation(),
 		triggeredBrowserNavigation: true
