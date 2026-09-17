@@ -25,5 +25,8 @@ public interface ChatPhoto {
 
 	Resolvable getThumbnail();
 	Resolvable getImage();
+	default String getFileName() {
+		return null;
+	}
 
 }

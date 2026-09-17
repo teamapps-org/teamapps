@@ -86,6 +86,7 @@ export {UiIFrame} from "./UiIFrame";
 export {UiFlexContainer} from "./UiFlexContainer";
 export {UiChatDisplay} from "./UiChatDisplay";
 export {UiChatInput} from "./UiChatInput";
+export {UiMasonryGallery} from "./UiMasonryGallery";
 export {UiAbsoluteLayout} from "./UiAbsoluteLayout";
 export {UiFloatingComponent} from "./UiFloatingComponent";
 export {UiPopup} from "./UiPopup";
