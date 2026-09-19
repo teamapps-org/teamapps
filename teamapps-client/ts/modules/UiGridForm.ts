@@ -47,6 +47,7 @@ import {generateUUID, parseHtml} from "./Common";
 import {bind} from "./util/Bind";
 import {UiComponent} from "./UiComponent";
 import {UiField} from "./formfield/UiField";
+import {preserveFormFocus} from "./util/PreserveFormFocus";
 
 export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements UiGridFormCommandHandler, UiGridFormEventSource {
 
@@ -111,6 +112,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 
 	@executeWhenFirstDisplayed(true)
 	private applyLayoutPolicy(layoutPolicy: UiFormLayoutPolicyConfig) {
+		const restoreFocus = preserveFormFocus(this.$mainDiv);
 		this.uiFields.forEach(uiField => {
 			let fieldWrapper = this.fieldWrappers.get(uiField);
 			if (fieldWrapper != null) {
@@ -134,6 +136,7 @@ export class UiGridForm extends AbstractUiComponent<UiGridFormConfig> implements
 			});
 			return section;
 		});
+		restoreFocus();
 	}
 
 	public setSectionCollapsed(sectionId: string, collapsed: boolean) {

@@ -55,6 +55,8 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	private nodes: UiTreeRecordConfig[];
 	private templateRenderers: { [name: string]: Renderer };
 	private contextMenu: ContextMenu;
+	private requestedSelection: number | null;
+	private revealSelection = false;
 
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -63,6 +65,7 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
 		this.nodes = config.initialData;
+		this.requestedSelection = config.selectedNodeId ?? null;
 
 		this.trivialTree = new TrivialTree<UiTreeRecordConfig>({
 			entries: buildObjectTree(config.initialData, "id", "parentId"),
@@ -88,6 +91,8 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 			directSelectionViaArrowKeys: true
 		});
 		this.trivialTree.onSelectedEntryChanged.addListener((entry) => {
+			this.requestedSelection = entry.id;
+			this.revealSelection = false;
 			this.onNodeSelected.fire({
 				nodeId: entry.id
 			});
@@ -126,6 +131,8 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	replaceData(nodes: UiTreeRecordConfig[]): void {
 		this.nodes = nodes;
 		this.trivialTree.updateEntries(buildObjectTree(nodes, "id", "parentId"));
+		// replaceData is throttled; a selection command may have arrived before its target nodes.
+		this.applyRequestedSelection();
 	}
 
 	bulkUpdate(nodesToBeRemoved: number[], nodesToBeAdded: UiTreeRecordConfig[]): void {
@@ -133,10 +140,28 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.nodes.push(...nodesToBeAdded);
 		nodesToBeRemoved.forEach(nodeId => this.trivialTree.removeNode(nodeId));
 		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node, false));
+		this.applyRequestedSelection();
 	}
 
 	public setSelectedNode(recordId: number | null): void {
-		this.trivialTree.selectNodeById(recordId);
+		this.requestedSelection = recordId;
+		this.revealSelection = this.revealSelection || this.trivialTree.getSelectedEntry()?.id !== recordId;
+		this.applyRequestedSelection();
+	}
+
+	private applyRequestedSelection(): void {
+		const id = this.requestedSelection;
+		if (id != null && id >= 0 && !this.nodes.some(node => node.id === id)) return;
+		this.trivialTree.selectNodeById(id);
+		if (id == null || id < 0) this.revealSelection = false;
+		if (this.revealSelection && this.$panel.clientHeight > 0) {
+			this.trivialTree.getTreeBox().revealSelectedEntry(false);
+			this.revealSelection = false;
+		}
+	}
+
+	public onResize(): void {
+		if (this.revealSelection) this.applyRequestedSelection();
 	}
 
 	registerTemplate(id: string, template: UiTemplateConfig): void {
