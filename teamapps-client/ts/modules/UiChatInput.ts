@@ -22,6 +22,7 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {createImageThumbnailUrl, fadeOut, insertAtCursorPosition, parseHtml} from "./Common";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {
+	UiChatInput_MicrophoneClickedEvent,
 	UiChatInput_FileItemClickedEvent,
 	UiChatInput_FileItemRemovedEvent,
 	UiChatInput_MessageSentEvent,
@@ -43,6 +44,7 @@ import {createUiChatNewFileConfig} from "../generated/UiChatNewFileConfig";
 
 export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implements UiChatInputCommandHandler, UiChatInputEventSource {
 
+	onMicrophoneClicked: TeamAppsEvent<UiChatInput_MicrophoneClickedEvent> = new TeamAppsEvent();
 	onFileItemClicked: TeamAppsEvent<UiChatInput_FileItemClickedEvent> = new TeamAppsEvent();
 	onFileItemRemoved: TeamAppsEvent<UiChatInput_FileItemRemovedEvent> = new TeamAppsEvent();
 	onMessageSent: TeamAppsEvent<UiChatInput_MessageSentEvent> = new TeamAppsEvent();
@@ -52,18 +54,21 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	onUploadSuccessful: TeamAppsEvent<UiChatInput_UploadSuccessfulEvent> = new TeamAppsEvent();
 	onUploadTooLarge: TeamAppsEvent<UiChatInput_UploadTooLargeEvent> = new TeamAppsEvent();
 
+	private pendingSend = false;
 	private $main: HTMLElement;
 	private $uploadItems: HTMLElement;
 	private uploadItems: FileUploadItem[] = [];
 	private $textInput: HTMLInputElement;
 	private $sendButton: HTMLElement;
 	private $attachmentButton: Element;
+	private $microphoneButton: HTMLButtonElement;
 
 	constructor(config: UiChatInputConfig, context: TeamAppsUiContext) {
 		super(config, context);
 		this.$main = parseHtml(`<div class="UiChatInput drop-zone">
 	<div class="upload-items"></div>
 	<textarea class="text-input" maxlength="${config.messageLengthLimit}"></textarea>
+	<button type="button" class="button microphone-button glyphicon glyphicon-record glyphicon-button glyphicon-button-md hidden"></button>
 	<div class="button attachment-button glyphicon glyphicon-paperclip glyphicon-button glyphicon-button-md"></div>
 	<div class="button send-button glyphicon glyphicon-send glyphicon-button glyphicon-button-md"></div>
 	<input class="file-input" type="file" multiple tabindex="-1"></input>
@@ -86,7 +91,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			}
 		});
 
-		this.$attachmentButton.addEventListener("click", () => $fileInput.click());
+		this.$attachmentButton.addEventListener("click", () => { if (!this.pendingSend) $fileInput.click(); });
 		$fileInput.addEventListener("change", e => {
 			this.upload($fileInput.files);
 			$fileInput.value = "";
@@ -95,7 +100,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		this.$sendButton.addEventListener("click", () => this.send());
 
 		this.$main.addEventListener("dragover", (e) => {
-			if (!this._config.attachmentsEnabled) {
+			if (!this._config.attachmentsEnabled || this.pendingSend) {
 				return;
 			}
 			this.$main.classList.add("drop-zone-active");
@@ -118,6 +123,9 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			this.upload(files);
 		});
 
+		this.$microphoneButton = this.$main.querySelector(":scope .microphone-button");
+		this.$microphoneButton.addEventListener("click", () => this.onMicrophoneClicked.fire({}));
+		this.setMicrophone(config.microphoneEnabled, config.microphoneCaption);
 		this.setAttachmentsEnabled(config.attachmentsEnabled);
 		this.updateSendability();
 	}
@@ -127,6 +135,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 			return;
 		}
 
+		if (this._config.acknowledgedSending) { this.pendingSend = true; this.setPendingSend(true); }
 		this.onMessageSent.fire({
 			message: createUiNewChatMessageConfig({
 				text: this.$textInput.value,
@@ -138,6 +147,10 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 					}))
 			})
 		});
+		if (!this._config.acknowledgedSending) this.clearDraft();
+	}
+
+	private clearDraft() {
 		this.$uploadItems.innerHTML = "";
 		this.uploadItems = [];
 		this.$textInput.value = "";
@@ -149,7 +162,7 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 	}
 
 	private upload(files: FileList) {
-		if (!this._config.attachmentsEnabled) {
+		if (!this._config.attachmentsEnabled || this.pendingSend) {
 			return;
 		}
 		for (let i = 0; i < files.length; i++) {
@@ -181,7 +194,27 @@ export class UiChatInput extends AbstractUiComponent<UiChatInputConfig> implemen
 		const uploading = this.uploadItems.some(item => item.state === UploadState.IN_PROGRESS);
 		const hasSuccessfulFileUploads = this.uploadItems.filter(item => item.state === UploadState.SUCCESS).length > 0;
 		const hasTextInput = this.$textInput.value.length > 0;
-		return !uploading && (hasSuccessfulFileUploads || hasTextInput);
+		return !this.pendingSend && !uploading && (hasSuccessfulFileUploads || hasTextInput);
+	}
+
+    private setPendingSend(pending: boolean) {
+        this.pendingSend = pending;
+        this.$textInput.disabled = pending;
+        this.$microphoneButton.disabled = pending;
+        this.$attachmentButton.classList.toggle("disabled", pending);
+        this.$uploadItems.style.pointerEvents = pending ? "none" : "";
+        this.updateSendability();
+    }
+    public completeSend(success: boolean) {
+        if (!this.pendingSend) return;
+        if (success) this.clearDraft();
+        this.setPendingSend(false);
+    }
+	public setMicrophone(enabled: boolean, caption: string) {
+		this.$main.classList.toggle("with-microphone", enabled);
+		this.$microphoneButton.classList.toggle("hidden", !enabled);
+		this.$microphoneButton.title = caption || "";
+		this.$microphoneButton.setAttribute("aria-label", caption || "");
 	}
 
 	public setAttachmentsEnabled(enabled: boolean) {

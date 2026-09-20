@@ -31,6 +31,8 @@ import {UiComponent} from "./UiComponent";
 import {UiChatMessageBatchConfig} from "../generated/UiChatMessageBatchConfig";
 import {debounce, debouncedMethod, DebounceMode} from "./util/debounce";
 
+import {CompactAudioPlayer} from "./micro-components/CompactAudioPlayer";
+
 export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> implements UiChatDisplayCommandHandler {
 
 	private $main: HTMLElement;
@@ -130,12 +132,14 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 		let messageIndex = this.uiChatMessages.findIndex(m => m.id === messageId);
 		if (messageIndex >= 0) {
 			let uiChatMessage = this.uiChatMessages[messageIndex];
+			uiChatMessage.destroy();
 			uiChatMessage.getMainDomElement().remove();
 			this.uiChatMessages.splice(messageIndex, 1);
 		}
 	}
 
 	clearMessages(batch: UiChatMessageBatchConfig): void {
+		this.uiChatMessages.forEach(message => message.destroy());
 		this.uiChatMessages = [];
 		this.$messages.innerHTML = '';
 		this.gotFirstMessage = false;
@@ -171,6 +175,11 @@ export class UiChatDisplay extends AbstractUiComponent<UiChatDisplayConfig> impl
 
 	onResize() {
 		this.scrollToBottom(); // hack. actually, I want to scrollToBottom only when this component gets re-attached...
+	}
+
+	destroy() {
+		this.uiChatMessages.forEach(message => message.destroy());
+		super.destroy();
 	}
 
 	closeContextMenu(): void {
@@ -209,6 +218,8 @@ class UiChatMessage {
 	private $photos: HTMLElement;
 	private $files: HTMLElement;
 	private config: UiChatMessageConfig;
+	private audioPlayers = new Map<string, CompactAudioPlayer>();
+	private $audios: HTMLElement;
 
 	constructor(config: UiChatMessageConfig) {
 		this.$main = parseHtml(`<div class="message UiChatMessage" data-id="${config.id}"></div>`);
@@ -218,7 +229,15 @@ class UiChatMessage {
 	public update(config: UiChatMessageConfig) {
 		this.config = config;
 		this.$main.classList.toggle("deleted", config.deleted);
-		this.$main.innerHTML = "";
+		// Keep an unchanged audio node connected while unrelated message metadata updates.
+        Array.from(this.$main.children).filter(child => child !== this.$audios).forEach(child => child.remove());
+        const sources = config.deleted ? [] : (config.audios || []);
+        this.$main.classList.toggle("with-audio", sources.length > 0);
+        const retained = new Set(sources.map(source => source.mediaId));
+        this.audioPlayers.forEach((player, id) => {
+            const source = sources.find(source => source.mediaId === id);
+            if (!retained.has(id) || player.source.audioUrl !== source.audioUrl) { player.destroy(); this.audioPlayers.delete(id); }
+        });
 		let text = removeDangerousTags(this.config.text);
 		text = UiChatMessage.AUTOLINKER.link(text);
 		this.$main.appendChild(parseHtml(`<img class="user-image" src="${this.config.userImageUrl}"></img>`))
@@ -228,6 +247,14 @@ class UiChatMessage {
 		this.$main.appendChild(parseHtml(`<div class="files"></div>`))
 		this.$main.appendChild(parseHtml(`<div class="deleted-icon"></div>`))
 
+        if (sources.length) {
+            if (!this.$audios) { this.$audios = document.createElement("div"); this.$audios.className = "audios"; this.$main.appendChild(this.$audios); }
+            sources.forEach(source => {
+                if (!this.audioPlayers.has(source.mediaId)) {
+                    const player = new CompactAudioPlayer(source); this.audioPlayers.set(source.mediaId, player); this.$audios.appendChild(player.element);
+                }
+            });
+        } else if (this.$audios) { this.$audios.remove(); this.$audios = null; }
 		this.$photos = this.$main.querySelector(":scope .photos");
 		this.$files = this.$main.querySelector(":scope .files");
 
@@ -246,6 +273,8 @@ class UiChatMessage {
 			});
 		}
 	}
+
+	public destroy() { this.audioPlayers.forEach(player => player.destroy()); this.audioPlayers.clear(); }
 
 	public get id() {
 		return this.config.id;

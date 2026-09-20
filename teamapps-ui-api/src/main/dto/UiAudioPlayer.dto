@@ -1,0 +1,10 @@
+class UiAudioSource {
+    String mediaId;
+    String audioUrl;
+    String caption;
+    String errorCaption;
+}
+
+class UiAudioPlayer extends UiComponent {
+    UiAudioSource source;
+}

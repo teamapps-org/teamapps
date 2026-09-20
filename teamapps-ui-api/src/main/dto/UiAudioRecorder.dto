@@ -1,0 +1,14 @@
+class UiAudioRecorder extends UiComponent {
+    int maxDurationMillis = 300000;
+    int maxBytes = 10000000;
+    String startCaption;
+    String finishCaption; // Optional: use the start button to finish recording as well.
+    String recordingCaption;
+    String readyCaption;
+    String errorCaption;
+    command finish();
+    command discard();
+    command requestChunk(String requestId, int sequence);
+    event stateChanged(String state);
+    event chunk(String requestId, int sequence, String extension, String data, boolean last);
+}

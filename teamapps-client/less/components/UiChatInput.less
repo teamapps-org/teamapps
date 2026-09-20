@@ -76,3 +76,9 @@
     display: none;
   }
 }
+
+.UiChatInput.with-microphone {
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-areas: "files files files files" "text microphone attach send";
+  .microphone-button { grid-area: microphone; border: 0; background: transparent; }
+}

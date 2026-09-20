@@ -1,0 +1,48 @@
+.UiAudioRecorder {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--ta-state-info-border);
+  border-radius: 14px;
+  background: var(--ta-state-info-bg);
+  color: var(--ta-text-color);
+  text-align: center;
+  meter, audio { width: 100%; }
+  output { font-size: 28px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  [role="status"] { font-size: 13px; }
+  [role="status"]:empty { display: none; }
+  button {
+    min-height: 52px; padding: 12px 20px; border: 1px solid var(--ta-color-primary);
+    border-radius: 10px; background: var(--ta-color-primary); color: #fff;
+    font: inherit; font-weight: 500; cursor: pointer;
+    &:disabled { opacity: .6; cursor: wait; }
+    &:focus-visible { outline: 2px solid var(--ta-text-color); outline-offset: 3px; }
+  }
+  &.recording button { background: var(--ta-state-danger-bg); color: var(--ta-state-danger-text); border-color: var(--ta-state-danger-border); }
+  [hidden] { display: none; }
+}
+.teamapps-compact-audio {
+  box-sizing: border-box;
+  width: 100%; max-width: 520px; min-width: 0;
+  margin: 6px 0; padding: 12px;
+  border: 1px solid var(--ta-state-info-border);
+  border-left: 4px solid var(--ta-color-primary);
+  border-radius: 14px;
+  background: var(--ta-state-info-bg);
+  color: var(--ta-state-info-text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+  .audio-caption { margin: 0 4px 8px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+  .audio-caption:empty { display: none; }
+  audio { width: 100%; display: block; border-radius: 24px; }
+  .audio-error { margin-top: 8px; color: var(--ta-text-color); }
+}
+// Supported by Chromium/WebKit; other browsers retain their native controls in the themed panel.
+.teamapps-compact-audio audio, .UiAudioRecorder audio {
+  &::-webkit-media-controls-panel { background-color: var(--ta-state-info-bg); }
+}
+.UiChatMessage.with-audio {
+  grid-template-areas: "userimage userNickname" "userimage audios" "userimage text" "userimage photos" "userimage files";
+  > .audios { grid-area: audios; min-width: 0; }
+}
+
+.theme-dark .teamapps-compact-audio audio, .theme-dark .UiAudioRecorder audio { color-scheme: dark; }

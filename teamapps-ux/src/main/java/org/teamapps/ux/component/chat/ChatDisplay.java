@@ -130,6 +130,7 @@ public class ChatDisplay extends AbstractComponent {
 				.map(file -> createUiChatFile(file))
 				.collect(Collectors.toList()) : null);
 		uiChatMessage.setDeleted(message.isDeleted());
+		uiChatMessage.setAudios(message.isDeleted() ? List.of() : message.getAudios());
 		return uiChatMessage;
 	}
 

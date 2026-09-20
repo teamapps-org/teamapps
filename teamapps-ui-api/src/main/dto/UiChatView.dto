@@ -38,8 +38,14 @@ class UiChatInput extends UiComponent {
 	String uploadUrl = "/upload";
 	int messageLengthLimit = 10000;
 	boolean attachmentsEnabled;
+	boolean microphoneEnabled = false;
+	String microphoneCaption;
+	boolean acknowledgedSending = false;
 
 	command setAttachmentsEnabled(boolean attachmentsEnabled);
+	command setMicrophone(boolean enabled, String caption);
+	event microphoneClicked();
+	command completeSend(boolean success);
 
 	event messageSent(UiNewChatMessage message);
 	event uploadTooLarge(String fileItemUuid, String fileName, String mimeType, long sizeInBytes);
@@ -63,6 +69,7 @@ class UiChatMessage {
 	String text;
 	List<UiChatPhoto> photos;
 	List<UiChatFile> files;
+	List<UiAudioSource> audios;
 	boolean deleted;
 }
 

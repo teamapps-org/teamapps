@@ -33,6 +33,10 @@ import java.util.stream.Collectors;
 public class ChatInput extends AbstractComponent {
 
 	public final Event<NewChatMessageData> onMessageSent = new Event<>();
+	public final Event<Void> onMicrophoneClicked = new Event<>();
+	private boolean microphoneEnabled;
+	private String microphoneCaption;
+	private boolean acknowledgedSending;
 
 	private long maxBytesPerUpload = 5000000;
 	private String uploadUrl = "/upload";
@@ -48,12 +52,18 @@ public class ChatInput extends AbstractComponent {
 		uiChatInput.setUploadUrl(uploadUrl);
 		uiChatInput.setMessageLengthLimit(messageLengthLimit);
 		uiChatInput.setAttachmentsEnabled(attachmentsEnabled);
+		uiChatInput.setMicrophoneEnabled(microphoneEnabled);
+		uiChatInput.setMicrophoneCaption(microphoneCaption);
+		uiChatInput.setAcknowledgedSending(acknowledgedSending);
 		return uiChatInput;
 	}
 
 	@Override
 	public void handleUiEvent(UiEvent event) {
 		switch (event.getUiEventType()) {
+			case UI_CHAT_INPUT_MICROPHONE_CLICKED:
+				if (microphoneEnabled) onMicrophoneClicked.fire();
+				break;
 			case UI_CHAT_INPUT_MESSAGE_SENT:
 				UiChatInput.MessageSentEvent messageSentEvent = (UiChatInput.MessageSentEvent) event;
 				String text = messageSentEvent.getMessage().getText();
@@ -81,6 +91,24 @@ public class ChatInput extends AbstractComponent {
 
 	public long getMaxBytesPerUpload() {
 		return maxBytesPerUpload;
+	}
+
+	/** Opt-in before rendering: retain the draft until the application confirms publication. */
+	public void setAcknowledgedSending(boolean acknowledgedSending) {
+		if (isRendered()) throw new IllegalStateException("Configure acknowledged sending before rendering");
+		this.acknowledgedSending = acknowledgedSending;
+	}
+
+	public void completeSend(boolean success) {
+		if (!acknowledgedSending) throw new IllegalStateException("Acknowledged sending is disabled");
+		queueCommandIfRendered(() -> new UiChatInput.CompleteSendCommand(getId(), success));
+	}
+
+	/** Opt-in action; changing it preserves the existing text and attachment draft. */
+	public void setMicrophone(boolean enabled, String caption) {
+		microphoneEnabled = enabled;
+		microphoneCaption = caption;
+		queueCommandIfRendered(() -> new UiChatInput.SetMicrophoneCommand(getId(), enabled, caption));
 	}
 
 	public void setMaxBytesPerUpload(long maxBytesPerUpload) {

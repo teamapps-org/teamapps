@@ -45,4 +45,8 @@ public interface ChatMessage {
 		return false;
 	}
 
+	default List<org.teamapps.dto.UiAudioSource> getAudios() {
+		return List.of();
+	}
+
 }

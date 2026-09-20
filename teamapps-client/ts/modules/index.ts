@@ -147,3 +147,6 @@ import * as log from "loglevel";
 (window as any).log = log;
 
 export {VideoTrackMixer} from "./webrtc/VideoTrackMixer"
+
+export {UiAudioRecorder} from "./UiAudioRecorder";
+export {UiAudioPlayer} from "./UiAudioPlayer";
