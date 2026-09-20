@@ -53,6 +53,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	private TreeModel<RECORD> model;
 	private PropertyProvider<RECORD> propertyProvider = new BeanPropertyExtractor<>();
 	private RECORD selectedNode;
+	private RECORD nodeToEnsureVisibleOnRender;
 
 	private Template entryTemplate = null; // null: use toString()
 	private TemplateDecider<RECORD> templateDecider = record -> entryTemplate;
@@ -95,6 +96,11 @@ public class Tree<RECORD> extends AbstractComponent {
 		super();
 		this.model = model;
 		registerModelListeners();
+		onRendered.addListener(() -> {
+			RECORD node = nodeToEnsureVisibleOnRender;
+			nodeToEnsureVisibleOnRender = null;
+			if (node != null) ensureVisible(node);
+		});
 	}
 
 	private void registerModelListeners() {
@@ -218,7 +224,7 @@ public class Tree<RECORD> extends AbstractComponent {
 			case UI_TREE_NODE_EXPANSION_CHANGED: {
 				UiTree.NodeExpansionChangedEvent e = (UiTree.NodeExpansionChangedEvent) event;
 				RECORD record = getRecordByUiId(e.getNodeId());
-				selectedNode = record;
+				// Expansion does not change selection in the browser.
 				if (record != null) {
 					onNodeExpansionChanged.fire(new TreeNodeExpansionEvent<>(record, e.getExpanded()));
 				}
@@ -265,6 +271,29 @@ public class Tree<RECORD> extends AbstractComponent {
 		int uiRecordId = uiRecordsByRecord.get(selectedNode) != null ? uiRecordsByRecord.get(selectedNode).getId() : -1;
 		this.selectedNode = selectedNode;
 		queueCommandIfRendered(() -> new UiTree.SetSelectedNodeCommand(getId(), uiRecordId));
+	}
+
+	/**
+	 * Opens the ancestors of {@code node} and scrolls it into the Tree's visible area,
+	 * without changing the selection or firing {@link #onNodeSelected}.
+	 * Ancestors that change their expansion state still fire {@link #onNodeExpansionChanged}.
+	 * The existing single-expanded-path setting is respected.
+	 * <p>
+	 * The node must be part of the data sent to the client (including already loaded lazy children).
+	 * Unknown or removed nodes are ignored; this method does not search unloaded lazy subtrees.
+	 * Before rendering, the latest request is retained until the initial data is sent.
+	 * A hidden Tree waits until it has a visible viewport. A newer request or a user selection
+	 * supersedes a request still waiting in the client.
+	 */
+	public void ensureVisible(RECORD node) {
+		if (!isRendered()) {
+			nodeToEnsureVisibleOnRender = node;
+			return;
+		}
+		UiTreeRecord uiRecord = uiRecordsByRecord.get(node);
+		if (uiRecord != null) {
+			queueCommandIfRendered(() -> new UiTree.EnsureVisibleCommand(getId(), uiRecord.getId()));
+		}
 	}
 
 	public TreeModel<RECORD> getModel() {

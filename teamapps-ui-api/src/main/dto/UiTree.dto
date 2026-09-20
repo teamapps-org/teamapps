@@ -35,6 +35,7 @@ class UiTree extends UiComponent {
 	command replaceData(List<UiTreeRecord> nodes);
 	command bulkUpdate(List<Integer> nodesToBeRemoved, List<UiTreeRecord> nodesToBeAdded);
 	command setSelectedNode(Integer recordId); // null = none selected
+	command ensureVisible(int recordId); // reveal a loaded node without changing selection
 	command registerTemplate(String id, UiTemplate template);
     command setContextMenuContent(int requestId, UiComponent* component);
     command closeContextMenu(int requestId);

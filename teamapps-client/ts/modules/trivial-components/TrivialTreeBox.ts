@@ -582,6 +582,23 @@ export class TrivialTreeBox<E> implements TrivialComponent {
 		return (this.selectedEntryId !== undefined && this.selectedEntryId !== null) ? this.findEntryById(this.selectedEntryId) : null;
 	}
 
+	/**
+	 * Reveals a loaded node without selecting it. Expansion events retain their normal meaning.
+	 * Unlike revealSelectedEntry, ancestors are opened root first so deeply hidden nodes render
+	 * before they are scrolled into view. Existing reveal/selection paths remain unchanged.
+	 */
+	public ensureNodeVisible(nodeId: number | string): boolean {
+		const target = this.findEntryById(nodeId);
+		if (!target) return false;
+		const ancestors: EntryWrapper<E>[] = [];
+		for (let parent = target.parent; parent; parent = parent.parent) ancestors.push(parent);
+		ancestors.reverse().forEach(parent => this.setNodeExpanded(parent, true, false));
+		this.markSelectedEntry(this.getSelectedEntryWrapper());
+		if (!target.$element) return false;
+		this.minimallyScrollTo(target.$element);
+		return true;
+	}
+
 	public revealSelectedEntry(animate: boolean = false) {
 		let selectedEntry = this.getSelectedEntryWrapper();
 		if (!selectedEntry) {

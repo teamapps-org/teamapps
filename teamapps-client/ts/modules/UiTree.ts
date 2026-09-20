@@ -55,8 +55,10 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 	private nodes: UiTreeRecordConfig[];
 	private templateRenderers: { [name: string]: Renderer };
 	private contextMenu: ContextMenu;
-	private requestedSelection: number | null;
-	private revealSelection = false;
+	private pendingData: UiTreeRecordConfig[] | undefined;
+	private pendingSelection: { recordId: number | null } | null = null;
+	private pendingVisibleNodeId: number | null = null;
+	private destroyed = false;
 
 	constructor(config: UiTreeConfig, context: TeamAppsUiContext) {
 		super(config, context);
@@ -65,7 +67,6 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		this.templateRenderers = context.templateRegistry.createTemplateRenderers(config.templates);
 
 		this.nodes = config.initialData;
-		this.requestedSelection = config.selectedNodeId ?? null;
 
 		this.trivialTree = new TrivialTree<UiTreeRecordConfig>({
 			entries: buildObjectTree(config.initialData, "id", "parentId"),
@@ -91,8 +92,8 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 			directSelectionViaArrowKeys: true
 		});
 		this.trivialTree.onSelectedEntryChanged.addListener((entry) => {
-			this.requestedSelection = entry.id;
-			this.revealSelection = false;
+			this.pendingSelection = null;
+			this.pendingVisibleNodeId = null;
 			this.onNodeSelected.fire({
 				nodeId: entry.id
 			});
@@ -127,41 +128,73 @@ export class UiTree extends AbstractUiComponent<UiTreeConfig> implements UiTreeC
 		return this.$panel;
 	}
 
-	@loadSensitiveThrottling(100, 10, 3000)
 	replaceData(nodes: UiTreeRecordConfig[]): void {
+		this.pendingData = nodes;
+		this.renderPendingData();
+	}
+
+	@loadSensitiveThrottling(100, 10, 3000)
+	private renderPendingData(): void {
+		this.flushPendingData();
+	}
+
+	private flushPendingData(): void {
+		if (this.destroyed || this.pendingData === undefined) return;
+		const nodes = this.pendingData;
+		const selection = this.pendingSelection;
+		this.pendingData = undefined;
+		this.pendingSelection = null;
 		this.nodes = nodes;
 		this.trivialTree.updateEntries(buildObjectTree(nodes, "id", "parentId"));
-		// replaceData is throttled; a selection command may have arrived before its target nodes.
-		this.applyRequestedSelection();
+		// Only repeat a selection that actually overlapped this pending replacement.
+		if (selection !== null) this.trivialTree.selectNodeById(selection.recordId);
+		this.applyPendingVisibility();
 	}
 
 	bulkUpdate(nodesToBeRemoved: number[], nodesToBeAdded: UiTreeRecordConfig[]): void {
+		// A delayed older snapshot must not overwrite this newer partial update.
+		this.flushPendingData();
 		this.nodes = this.nodes.filter(node => nodesToBeRemoved.indexOf(node.id) === -1);
 		this.nodes.push(...nodesToBeAdded);
 		nodesToBeRemoved.forEach(nodeId => this.trivialTree.removeNode(nodeId));
 		nodesToBeAdded.forEach(node => this.trivialTree.addOrUpdateNode(node.parentId, node, false));
-		this.applyRequestedSelection();
+		this.applyPendingVisibility();
 	}
 
 	public setSelectedNode(recordId: number | null): void {
-		this.requestedSelection = recordId;
-		this.revealSelection = this.revealSelection || this.trivialTree.getSelectedEntry()?.id !== recordId;
-		this.applyRequestedSelection();
+		this.trivialTree.selectNodeById(recordId);
+		this.pendingSelection = this.pendingData !== undefined ? {recordId} : null;
 	}
 
-	private applyRequestedSelection(): void {
-		const id = this.requestedSelection;
-		if (id != null && id >= 0 && !this.nodes.some(node => node.id === id)) return;
-		this.trivialTree.selectNodeById(id);
-		if (id == null || id < 0) this.revealSelection = false;
-		if (this.revealSelection && this.$panel.clientHeight > 0) {
-			this.trivialTree.getTreeBox().revealSelectedEntry(false);
-			this.revealSelection = false;
+	/** Opens the target's ancestors and scrolls it into view without changing selection. */
+	public ensureVisible(recordId: number): void {
+		this.pendingVisibleNodeId = recordId;
+		this.applyPendingVisibility();
+	}
+
+	private applyPendingVisibility(): void {
+		if (this.destroyed || this.pendingVisibleNodeId === null || this.pendingData !== undefined) return;
+		const id = this.pendingVisibleNodeId;
+		if (!this.nodes.some(node => node.id === id)) {
+			this.pendingVisibleNodeId = null;
+			return;
 		}
+		// Hidden tabs are handled by onResize once their Tree has a viewport.
+		if (!this.$panel.isConnected || this.$panel.clientHeight === 0 || this.$panel.clientWidth === 0) return;
+		this.pendingVisibleNodeId = null;
+		this.trivialTree.getTreeBox().ensureNodeVisible(id);
 	}
 
 	public onResize(): void {
-		if (this.revealSelection) this.applyRequestedSelection();
+		this.applyPendingVisibility();
+	}
+
+	public destroy(): void {
+		this.destroyed = true;
+		this.pendingData = undefined;
+		this.pendingSelection = null;
+		this.pendingVisibleNodeId = null;
+		super.destroy();
 	}
 
 	registerTemplate(id: string, template: UiTemplateConfig): void {
