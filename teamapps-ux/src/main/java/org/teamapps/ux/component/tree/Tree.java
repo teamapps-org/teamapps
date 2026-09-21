@@ -67,6 +67,10 @@ public class Tree<RECORD> extends AbstractComponent {
 	private boolean enforceSingleExpandedPath = false;
 
 	private Function<RECORD, Component> contextMenuProvider = null;
+	// Strong reference — displayed context menus must not get garbage collected.
+	// Deliberately retained until replaced by the next context menu or explicitly closed via closeContextMenu();
+	// a client-side dismissal does not clear it (bounded: at most one menu subtree is kept alive).
+	private Component lastContextMenuComponent;
 	private int lastSeenContextMenuRequestId;
 
 	private Function<RECORD, String> recordToStringFunction = Object::toString;
@@ -251,6 +255,7 @@ public class Tree<RECORD> extends AbstractComponent {
 					RECORD record = getRecordByUiId(e.getRecordId());
 					if (record != null) {
 						Component contextMenuContent = contextMenuProvider.apply(record);
+						lastContextMenuComponent = contextMenuContent; // strong reference while the context menu is displayed
 						if (contextMenuContent != null) {
 							queueCommandIfRendered(() -> new UiInfiniteItemView2.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 						} else {
@@ -368,6 +373,7 @@ public class Tree<RECORD> extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
+		lastContextMenuComponent = null;
 		queueCommandIfRendered(() -> new UiInfiniteItemView2.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 

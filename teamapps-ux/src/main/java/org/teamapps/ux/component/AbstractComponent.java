@@ -61,6 +61,8 @@ public abstract class AbstractComponent implements Component {
 	private final Map<String, CssStyles> stylesBySelector = new HashMap<>(0);
 	private final Map<String, Map<String, String>> attributesBySelector = new HashMap<>(0);
 
+	private boolean pinnedWhileDisplayed;
+
 	public AbstractComponent() {
 		this.sessionContext = CurrentSessionContext.get();
 		id = getClass().getSimpleName() + "-" + UUID.randomUUID().toString();
@@ -82,6 +84,30 @@ public abstract class AbstractComponent implements Component {
 
 	public SessionContext getSessionContext() {
 		return sessionContext;
+	}
+
+	/**
+	 * Pins this component in its session context until {@link #releaseDisplayPin()}, so it does not get garbage
+	 * collected while displayed even if the application holds no reference to it
+	 * (see {@link org.teamapps.config.TeamAppsConfiguration#setClientObjectGarbageCollectionEnabled(boolean)}).
+	 * Idempotent per display cycle: consecutive calls acquire only one pin, so a racing double-release
+	 * (e.g. a server-side close plus the client's close event) cannot steal an independent application pin.
+	 */
+	public final void pinWhileDisplayed() {
+		if (!pinnedWhileDisplayed) {
+			pinnedWhileDisplayed = true;
+			sessionContext.pinClientObject(this);
+		}
+	}
+
+	/**
+	 * Releases the pin acquired by {@link #pinWhileDisplayed()}. No-op if not pinned.
+	 */
+	protected final void releaseDisplayPin() {
+		if (pinnedWhileDisplayed) {
+			pinnedWhileDisplayed = false;
+			sessionContext.unpinClientObject(this);
+		}
 	}
 
 	@Override

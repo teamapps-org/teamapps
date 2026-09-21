@@ -90,6 +90,7 @@ public class Notification extends AbstractComponent {
 			}
 			case UI_NOTIFICATION_CLOSED: {
 				this.showing = false;
+				releaseDisplayPin();
 				onClosed.fire(((UiNotification.ClosedEvent) event).getByUser());
 				break;
 			}
@@ -97,6 +98,8 @@ public class Notification extends AbstractComponent {
 	}
 
 	public void close() {
+		// server-initiated close does not fire UI_NOTIFICATION_CLOSED back, so release the pin here
+		releaseDisplayPin();
 		queueCommandIfRendered(() -> new UiNotification.CloseCommand(getId()));
 	}
 

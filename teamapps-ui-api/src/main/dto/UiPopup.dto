@@ -35,4 +35,6 @@ class UiPopup extends UiComponent {
 	command setDimensions(int width, int height);
 
 	command close();
+
+	event closed();
 }

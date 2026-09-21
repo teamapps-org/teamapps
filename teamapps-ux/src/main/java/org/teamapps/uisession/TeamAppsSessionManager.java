@@ -116,7 +116,21 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 		this.houseKeepingScheduledExecutor.scheduleAtFixedRate(
 				() -> {
 					try {
-						sessionsById.values().forEach(s -> s.getUiSession().updateStats());
+						sessionsById.values().forEach(s -> {
+							try {
+								// destroy the client-side counterparts of garbage collected client objects
+								// (also covers idle sessions, which do not trigger the opportunistic drain)
+								s.getSessionContext().drainCollectedClientObjects();
+							} catch (Exception e) {
+								LOGGER.error("Exception while draining collected client objects for session " + s.getUiSession().getSessionId() + "!", e);
+							}
+							// Note: the drain above updates the registry asynchronously within the session context,
+							// so these counts may lag behind by one housekeeping cycle. That is acceptable for statistics.
+							s.getUiSession().getStatistics().updateClientObjectCounts(
+									s.getSessionContext().getClientObjectCount(),
+									s.getSessionContext().getCollectedClientObjectsCount());
+							s.getUiSession().updateStats();
+						});
 						onStatsUpdated.fire(new SessionStatsUpdatedEventData(getAllSessions(), getClosedSessionsStatistics()));
 					} catch (Exception e) {
 						LOGGER.error("Exception while flushing stats!", e);
@@ -301,7 +315,8 @@ public class TeamAppsSessionManager implements HttpSessionListener {
 				httpSession,
 				uxServerContext,
 				new SessionIconProvider(iconProvider),
-				navigationPathPrefix, new ParameterConverterProvider()
+				navigationPathPrefix, new ParameterConverterProvider(),
+				config.isClientObjectGarbageCollectionEnabled()
 		);
 	}
 

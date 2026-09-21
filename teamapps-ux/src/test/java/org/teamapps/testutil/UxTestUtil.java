@@ -45,6 +45,10 @@ public class UxTestUtil {
 	}
 
 	public static SessionContext createDummySessionContext() {
+		return createDummySessionContext(false);
+	}
+
+	public static SessionContext createDummySessionContext(boolean clientObjectGarbageCollectionEnabled) {
 		final ClientInfo clientInfo = new ClientInfo("ip", 1024, 768, 1000, 700, "en", false, "Europe/Berlin", 120, Collections.emptyList(), "userAgentString", Mockito.mock(Location.class), Collections.emptyMap(), TEAMAPPS_VERSION);
 		return new SessionContext(
 				Mockito.mock(UiSession.class),
@@ -53,7 +57,8 @@ public class UxTestUtil {
 				Mockito.mock(UxServerContext.class),
 				Mockito.mock(SessionIconProvider.class),
 				"",
-				Mockito.mock(ParamConverterProvider.class)
+				Mockito.mock(ParamConverterProvider.class),
+				clientObjectGarbageCollectionEnabled
 		);
 	}
 

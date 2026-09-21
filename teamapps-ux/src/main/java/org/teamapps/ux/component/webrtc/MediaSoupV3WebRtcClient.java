@@ -69,6 +69,10 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	private UiMediaSoupPlaybackParameters playbackParameters;
 
 	private Supplier<Component> contextMenuProvider = null;
+	// Strong reference — displayed context menus must not get garbage collected.
+	// Deliberately retained until replaced by the next context menu or explicitly closed via closeContextMenu();
+	// a client-side dismissal does not clear it (bounded: at most one menu subtree is kept alive).
+	private Component lastContextMenuComponent;
 	private int lastSeenContextMenuRequestId;
 
 	private boolean bitrateDisplayEnabled;
@@ -150,6 +154,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 				lastSeenContextMenuRequestId = e.getRequestId();
 				if (contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.get();
+					lastContextMenuComponent = contextMenuContent; // strong reference while the context menu is displayed
 					if (contextMenuContent != null) {
 						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
@@ -359,6 +364,7 @@ public class MediaSoupV3WebRtcClient extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
+		lastContextMenuComponent = null;
 		queueCommandIfRendered(() -> new UiInfiniteItemView.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 

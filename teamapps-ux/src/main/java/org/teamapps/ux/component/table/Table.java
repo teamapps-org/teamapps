@@ -123,6 +123,10 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 
 	private Function<RECORD, Component> contextMenuProvider = null;
 	private int lastSeenContextMenuRequestId;
+	// Strong reference — displayed context menus must not get garbage collected.
+	// Deliberately retained until replaced by the next context menu or explicitly closed via closeContextMenu();
+	// a client-side dismissal does not clear it (bounded: at most one menu subtree is kept alive).
+	private Component lastContextMenuComponent;
 	private int rowBorderWidth;
 
 	public Table() {
@@ -352,6 +356,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 				RECORD record = renderedRecords.getRecord(e.getRecordId());
 				if (record != null && contextMenuProvider != null) {
 					Component contextMenuContent = contextMenuProvider.apply(record);
+					lastContextMenuComponent = contextMenuContent; // strong reference while the context menu is displayed
 					if (contextMenuContent != null) {
 						queueCommandIfRendered(() -> new UiInfiniteItemView.SetContextMenuContentCommand(getId(), e.getRequestId(), contextMenuContent.createUiReference()));
 					} else {
@@ -1248,6 +1253,7 @@ public class Table<RECORD> extends AbstractInfiniteListComponent<RECORD, TableMo
 	}
 
 	public void closeContextMenu() {
+		lastContextMenuComponent = null;
 		queueCommandIfRendered(() -> new UiTable.CloseContextMenuCommand(getId(), this.lastSeenContextMenuRequestId));
 	}
 
