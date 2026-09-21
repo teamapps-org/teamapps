@@ -118,7 +118,7 @@ function createGlyphIconElementRenderer(element: UiGlyphIconElementConfig, addit
 		if (value == null) {
 			return "";
 		} else {
-			return `<div data-key="${element.property}" class="grid-template-element UiGlyphIconElement fas fa-${value}" style="${style} ${backgroundColorCss} ${additionalCss}')"></div>`;
+			return `<div data-key="${element.property}" class="grid-template-element UiGlyphIconElement ${value}" style="${style} ${backgroundColorCss} ${additionalCss}"></div>`;
 		}
 	};
 }
