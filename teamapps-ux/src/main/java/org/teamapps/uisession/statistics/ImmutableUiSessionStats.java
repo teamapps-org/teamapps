@@ -36,6 +36,8 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 	private final ImmutableCountStats queryResultStats;
 	private final ImmutableSumStats sentDataStats;
 	private final ImmutableSumStats receivedDataStats;
+	private final long clientObjectCount;
+	private final long collectedClientObjectCount;
 
 	public static class ImmutableCountStats implements CountStats {
 		private final long count;
@@ -106,7 +108,9 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 								   ImmutableCountStats queryStats           ,
 								   ImmutableCountStats queryResultStats     ,
 								   ImmutableSumStats sentDataStats,
-								   ImmutableSumStats receivedDataStats
+								   ImmutableSumStats receivedDataStats,
+								   long clientObjectCount,
+								   long collectedClientObjectCount
 	) {
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -120,6 +124,8 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 		this.queryResultStats = queryResultStats;
 		this.sentDataStats = sentDataStats;
 		this.receivedDataStats = receivedDataStats;
+		this.clientObjectCount = clientObjectCount;
+		this.collectedClientObjectCount = collectedClientObjectCount;
 	}
 
 	@Override
@@ -180,5 +186,15 @@ public class ImmutableUiSessionStats implements UiSessionStats {
 	@Override
 	public SumStats getReceivedDataStats() {
 		return receivedDataStats;
+	}
+
+	@Override
+	public long getClientObjectCount() {
+		return clientObjectCount;
+	}
+
+	@Override
+	public long getCollectedClientObjectCount() {
+		return collectedClientObjectCount;
 	}
 }

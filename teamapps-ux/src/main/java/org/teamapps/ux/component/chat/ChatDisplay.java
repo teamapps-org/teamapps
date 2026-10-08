@@ -44,6 +44,10 @@ public class ChatDisplay extends AbstractComponent {
 	private Icon<?, ?> deletedMessageIcon = MaterialIcon.DELETE.withStyle(MaterialIconStyles.OUTLINE_GREY_900);
 
 	private Function<ChatMessage, Component> contextMenuProvider = null;
+	// Strong reference — displayed context menus must not get garbage collected.
+	// Deliberately retained until replaced by the next context menu or explicitly closed via closeContextMenu();
+	// a client-side dismissal does not clear it (bounded: at most one menu subtree is kept alive).
+	private Component lastContextMenuComponent;
 
 	public ChatDisplay(ChatDisplayModel model) {
 		this.model = model;
@@ -98,6 +102,7 @@ public class ChatDisplay extends AbstractComponent {
 				ChatMessage chatMessage = model.getChatMessageById(q.getChatMessageId());
 				if (chatMessage != null) {
 					Component component = contextMenuProvider.apply(chatMessage);
+					lastContextMenuComponent = component; // strong reference while the context menu is displayed
 					return component != null ? component.createUiReference() : null;
 				}
 			}
@@ -176,6 +181,7 @@ public class ChatDisplay extends AbstractComponent {
 	}
 
 	public void closeContextMenu() {
+		lastContextMenuComponent = null;
 		queueCommandIfRendered(() -> new UiChatDisplay.CloseContextMenuCommand(getId()));
 	}
 

@@ -38,4 +38,14 @@ public interface UiSessionStats {
 	SumStats getSentDataStats();
 	SumStats getReceivedDataStats();
 
+	/**
+	 * Number of client objects currently registered in the session (gauge).
+	 */
+	long getClientObjectCount();
+
+	/**
+	 * Total number of client objects garbage collected during the session's lifetime (cumulative).
+	 */
+	long getCollectedClientObjectCount();
+
 }

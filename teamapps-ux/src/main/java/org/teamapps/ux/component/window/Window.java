@@ -97,6 +97,8 @@ public class Window extends Panel {
 		super.handleUiEvent(event);
 		switch (event.getUiEventType()) {
 			case UI_WINDOW_CLOSED -> {
+				// user-initiated close (close button, escape, click outside) — release the strong reference created in show()
+				releaseDisplayPin();
 				onClosed.fire();
 			}
 		}
@@ -194,6 +196,7 @@ public class Window extends Panel {
 	}
 
 	public void show(int animationDuration) {
+		pinWhileDisplayed(); // shown windows must not get garbage collected; unpinned on close
 		render();
 		queueCommandIfRendered(() -> new UiWindow.ShowCommand(getId(), animationDuration));
 	}
@@ -203,6 +206,8 @@ public class Window extends Panel {
 	}
 
 	public void close(int animationDuration) {
+		// server-initiated close does not fire UI_WINDOW_CLOSED back, so unpin here
+		releaseDisplayPin();
 		queueCommandIfRendered(() -> new UiWindow.CloseCommand(getId(), animationDuration));
 	}
 

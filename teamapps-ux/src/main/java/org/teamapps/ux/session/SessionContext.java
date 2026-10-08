@@ -59,10 +59,14 @@ import org.teamapps.ux.resource.Resource;
 import org.teamapps.ux.session.navigation.*;
 
 import java.io.File;
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -76,6 +80,16 @@ import static org.teamapps.ux.session.navigation.RoutingUtil.normalizePath;
 public class SessionContext {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionContext.class);
+
+	private static class ClientObjectWeakReference extends WeakReference<ClientObject> {
+		final String clientObjectId;
+
+		ClientObjectWeakReference(ClientObject clientObject, ReferenceQueue<ClientObject> queue) {
+			super(clientObject, queue);
+			this.clientObjectId = clientObject.getId();
+		}
+	}
+
 	private static final String DEFAULT_BACKGROUND_NAME = "defaultBackground";
 	private static final String DEFAULT_BACKGROUND_URL = "/resources/backgrounds/default-bl.jpg";
 
@@ -104,7 +118,35 @@ public class SessionContext {
 	private final UxServerContext serverContext;
 	private final SessionIconProvider iconProvider;
 	private final UxJacksonSerializationTemplate uxJacksonSerializationTemplate;
-	private final HashMap<String, ClientObject> clientObjectsById = new HashMap<>();
+	/**
+	 * Registry of all rendered client objects, keyed by id. If {@link #clientObjectGarbageCollectionEnabled}, the values
+	 * are weak references, so client objects that are neither displayed (see {@link #pinnedClientObjects} and
+	 * {@link #attachedRootComponents}, plus the strong parent→child references between components) nor referenced by
+	 * application code get garbage collected. Their client-side counterparts are destroyed via
+	 * {@link #drainCollectedClientObjects()}. If the flag is disabled, every registered client object is additionally
+	 * pinned, restoring the historical strongly-referenced behavior.
+	 */
+	private final ConcurrentHashMap<String, ClientObjectWeakReference> clientObjectsById = new ConcurrentHashMap<>();
+	private final ReferenceQueue<ClientObject> collectedClientObjectsQueue = new ReferenceQueue<>();
+	/**
+	 * Strong references to client objects that are displayed without necessarily being referenced by application code:
+	 * shown windows, popups, notifications etc. Reference-counted: {@link #pinClientObject(ClientObject)} increments,
+	 * {@link #unpinClientObject(ClientObject)} decrements and removes the entry when the count reaches zero, so an
+	 * object pinned for multiple independent reasons stays pinned until every reason released it.
+	 * Mutated only within the session context.
+	 */
+	private final Map<ClientObject, Integer> pinnedClientObjects = new IdentityHashMap<>();
+	/**
+	 * Strong references to components attached as root panels ({@link #addRootPanel(String, Component)}). Deliberately
+	 * accumulating and never released: the client-side {@code UiRootPanel.buildRootPanel} <i>appends</i> the root
+	 * panel to the container element, so every attached root component stays displayed for the rest of the session
+	 * (there is no API for removing or replacing a root panel). In particular, this must not be keyed by container
+	 * selector: adding a second root panel for the same selector displays both, so releasing the first one would let
+	 * it be garbage collected and its still-visible client-side counterpart destroyed.
+	 */
+	private final List<Component> attachedRootComponents = new ArrayList<>();
+	private volatile long collectedClientObjectsCount; // written within the session context, read by the housekeeping thread
+	private final boolean clientObjectGarbageCollectionEnabled;
 	private final SessionContextResourceManager sessionResourceProvider;
 
 	private TranslationProvider translationProvider;
@@ -119,6 +161,10 @@ public class SessionContext {
 	private Window sessionExpiredWindow;
 	private Window sessionErrorWindow;
 	private Window sessionTerminatedWindow;
+	// strong references to the effective (potentially default) session message windows sent to the client
+	private Window effectiveSessionExpiredWindow;
+	private Window effectiveSessionErrorWindow;
+	private Window effectiveSessionTerminatedWindow;
 
 	private final ParamConverterProvider navigationParamConverterProvider;
 	private final String navigationPathPrefix;
@@ -140,6 +186,9 @@ public class SessionContext {
 					ClientObject clientObject = getClientObject(uiComponentId);
 					if (clientObject != null) {
 						clientObject.handleUiEvent(event);
+					} else if (clientObjectGarbageCollectionEnabled) {
+						// The client object may have been garbage collected (or unrendered) while the event was in flight.
+						LOGGER.warn("Ignoring UI event {} for unknown or garbage collected client object {}", event.getUiEventType(), uiComponentId);
 					} else {
 						throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
 					}
@@ -156,8 +205,14 @@ public class SessionContext {
 				ClientObject clientObject = getClientObject(uiComponentId);
 				if (clientObject != null) {
 					Object result = clientObject.handleUiQuery(query);
-					new UxJacksonSerializationTemplate(SessionContext.this).doWithUxJacksonSerializers(() -> {
+					uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> {
 						resultCallback.accept(result);
+					});
+				} else if (clientObjectGarbageCollectionEnabled) {
+					// The client object may have been garbage collected (or unrendered) while the query was in flight.
+					LOGGER.warn("Returning null result for UI query {} for unknown or garbage collected client object {}", query.getUiQueryType(), uiComponentId);
+					uxJacksonSerializationTemplate.doWithUxJacksonSerializers(() -> {
+						resultCallback.accept(null);
 					});
 				} else {
 					throw new TeamAppsComponentNotFoundException(sessionId, uiComponentId);
@@ -199,8 +254,10 @@ public class SessionContext {
 						  UxServerContext serverContext,
 						  SessionIconProvider iconProvider,
 						  String navigationPathPrefix,
-						  ParamConverterProvider navigationParamConverterProvider // TODO #ownInterfaces
+						  ParamConverterProvider navigationParamConverterProvider, // TODO #ownInterfaces
+						  boolean clientObjectGarbageCollectionEnabled
 	) {
+		this.clientObjectGarbageCollectionEnabled = clientObjectGarbageCollectionEnabled;
 		this.sessionExecutor = sessionExecutor;
 		this.uiSession = uiSession;
 		this.httpSession = httpSession;
@@ -574,10 +631,12 @@ public class SessionContext {
 	}
 
 	public void showPopupAtCurrentMousePosition(Popup popup) {
+		popup.pinWhileDisplayed(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupAtCurrentMousePositionCommand(popup.createUiReference()));
 	}
 
 	public void showPopup(Popup popup) {
+		popup.pinWhileDisplayed(); // unpinned in Popup.close()
 		queueCommand(new UiRootPanel.ShowPopupCommand(popup.createUiReference()));
 	}
 
@@ -604,15 +663,99 @@ public class SessionContext {
 
 	public void registerClientObject(ClientObject clientObject) {
 		CurrentSessionContext.throwIfNotSameAs(this);
-		clientObjectsById.put(clientObject.getId(), clientObject);
+		drainCollectedClientObjects();
+		clientObjectsById.put(clientObject.getId(), new ClientObjectWeakReference(clientObject, collectedClientObjectsQueue));
+		if (!clientObjectGarbageCollectionEnabled) {
+			pinnedClientObjects.putIfAbsent(clientObject, 1);
+		}
 	}
 
 	public void unregisterClientObject(ClientObject clientObject) {
-		clientObjectsById.remove(clientObject.getId());
+		CurrentSessionContext.throwIfNotSameAs(this);
+		ClientObjectWeakReference reference = clientObjectsById.get(clientObject.getId());
+		if (reference != null && reference.get() == clientObject) {
+			clientObjectsById.remove(clientObject.getId());
+		}
+		pinnedClientObjects.remove(clientObject);
 	}
 
 	public ClientObject getClientObject(String clientObjectId) {
-		return clientObjectsById.get(clientObjectId);
+		ClientObjectWeakReference reference = clientObjectsById.get(clientObjectId);
+		return reference != null ? reference.get() : null;
+	}
+
+	/**
+	 * Strongly references the given client object from this session context, preventing its garbage collection
+	 * (see {@link org.teamapps.config.TeamAppsConfiguration#setClientObjectGarbageCollectionEnabled(boolean)}).
+	 * Use this for client objects that must stay alive while displayed although application code may not reference them,
+	 * e.g. custom components sending {@link ClientObject#createUiReference()} of temporary objects.
+	 * Pins are reference-counted: pinning the same object multiple times requires the same number of
+	 * {@link #unpinClientObject(ClientObject)} calls to release it.
+	 * Must be invoked with this session context bound to the current thread.
+	 */
+	public void pinClientObject(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+		pinnedClientObjects.merge(clientObject, 1, Integer::sum);
+	}
+
+	/**
+	 * Releases one strong reference (pin) created by {@link #pinClientObject(ClientObject)}. The object stays pinned
+	 * until every pin has been released. Unpinning an object that is not pinned is a no-op, so it never releases
+	 * pins held for other reasons.
+	 * Must be invoked with this session context bound to the current thread.
+	 */
+	public void unpinClientObject(ClientObject clientObject) {
+		CurrentSessionContext.throwIfNotSameAs(this);
+		if (!clientObjectGarbageCollectionEnabled) {
+			// with garbage collection disabled, client objects must stay strongly referenced until the session
+			// is destroyed (exact historical behavior)
+			return;
+		}
+		pinnedClientObjects.computeIfPresent(clientObject, (o, count) -> count > 1 ? count - 1 : null);
+	}
+
+	/**
+	 * Removes registry entries of garbage collected client objects and destroys their client-side counterparts.
+	 * May be called from any thread. The registry cleanup and command queuing are executed within the session context.
+	 */
+	public void drainCollectedClientObjects() {
+		List<ClientObjectWeakReference> collectedReferences = null;
+		Reference<? extends ClientObject> reference;
+		while ((reference = collectedClientObjectsQueue.poll()) != null) {
+			if (collectedReferences == null) {
+				collectedReferences = new ArrayList<>();
+			}
+			collectedReferences.add((ClientObjectWeakReference) reference);
+		}
+		if (collectedReferences == null) {
+			return;
+		}
+		List<ClientObjectWeakReference> references = collectedReferences;
+		runWithContext(() -> {
+			for (ClientObjectWeakReference collectedReference : references) {
+				// Remove only if the registry still holds this very reference. Otherwise the client object was explicitly
+				// unregistered (unrender() already sent a destroy command) or a new client object reuses the id.
+				if (clientObjectsById.remove(collectedReference.clientObjectId, collectedReference)) {
+					collectedClientObjectsCount++;
+					LOGGER.debug("Client object {} was garbage collected. Destroying its client-side counterpart.", collectedReference.clientObjectId);
+					queueCommand(new UiRootPanel.DestroyComponentCommand(collectedReference.clientObjectId));
+				}
+			}
+		});
+	}
+
+	/**
+	 * Number of client objects currently registered (including those garbage collected but not yet drained).
+	 */
+	public int getClientObjectCount() {
+		return clientObjectsById.size();
+	}
+
+	/**
+	 * Total number of client objects that have been garbage collected during this session's lifetime.
+	 */
+	public long getCollectedClientObjectsCount() {
+		return collectedClientObjectsCount;
 	}
 
 	public String createResourceLink(Resource resource) {
@@ -668,6 +811,7 @@ public class SessionContext {
 	}
 
 	public void addRootPanel(String containerElementSelector, Component rootPanel) {
+		attachedRootComponents.add(rootPanel); // strong reference: the displayed tree must not get garbage collected
 		queueCommand(new UiRootPanel.BuildRootPanelCommand(containerElementSelector, rootPanel.createUiReference()));
 	}
 
@@ -698,6 +842,7 @@ public class SessionContext {
 
 	public void showNotification(Notification notification, NotificationPosition position, EntranceAnimation entranceAnimation, ExitAnimation exitAnimation) {
 		runWithContext(() -> {
+			notification.pinWhileDisplayed(); // unpinned when the notification closes (Notification.close() or client-side close event)
 			queueCommand(new UiRootPanel.ShowNotificationCommand(notification.createUiReference(), position.toUiNotificationPosition(), entranceAnimation.toUiEntranceAnimation(),
 					exitAnimation.toUiExitAnimation()));
 		});
@@ -755,14 +900,20 @@ public class SessionContext {
 	}
 
 	private void updateSessionMessageWindows() {
+		// keep strong references to the effective windows — the client-side objects must not get garbage collected
+		effectiveSessionExpiredWindow = sessionExpiredWindow != null ? sessionExpiredWindow
+				: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
+				getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
+		effectiveSessionErrorWindow = sessionErrorWindow != null ? sessionErrorWindow
+				: createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
+				getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
+		effectiveSessionTerminatedWindow = sessionTerminatedWindow != null ? sessionTerminatedWindow
+				: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
+				getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel"));
 		queueCommand(new UiRootPanel.SetSessionMessageWindowsCommand(
-				sessionExpiredWindow != null ? sessionExpiredWindow.createUiReference()
-						: createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionExpired"), getLocalized("teamapps.common.sessionExpiredText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-				sessionErrorWindow != null ? sessionErrorWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.error"), getLocalized("teamapps.common.sessionErrorText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference(),
-				sessionTerminatedWindow != null ? sessionTerminatedWindow.createUiReference() : createDefaultSessionMessageWindow(getLocalized("teamapps.common.sessionTerminated"), getLocalized("teamapps.common.sessionTerminatedText"),
-						getLocalized("teamapps.common.refresh"), getLocalized("teamapps.common.cancel")).createUiReference())
+				effectiveSessionExpiredWindow.createUiReference(),
+				effectiveSessionErrorWindow.createUiReference(),
+				effectiveSessionTerminatedWindow.createUiReference())
 		);
 	}
 
