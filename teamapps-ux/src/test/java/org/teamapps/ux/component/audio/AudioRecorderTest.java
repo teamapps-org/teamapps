@@ -55,4 +55,73 @@ public class AudioRecorderTest {
         assertTrue(recordings.isEmpty());
         recorder.upload(); assertNotEquals(second, lastRequest().getRequestId());
     }
+
+    @Test public void legacyConstructionKeepsOptionsAbsentAndDoesNotExposeEnhancedEvents() {
+        assertNull(recorder.createUiComponent().getRecordingOptions());
+        assertNull(recorder.createUiComponent().getSetup());
+        List<String> received = new ArrayList<>();
+        recorder.onSetupStateChanged.addListener(value -> { received.add(value); });
+        recorder.handleUiEvent(new UiAudioRecorder.SetupStateChangedEvent(recorder.getId(), "testing"));
+        assertTrue(received.isEmpty());
+        assertThrows(IllegalStateException.class, recorder::startMicrophoneTest);
+    }
+
+    @Test public void optionsAndLocalizedSetupAreSnapshottedWithoutChangingOriginalConstructors() {
+        AudioRecordingOptions options = new AudioRecordingOptions().setSampleRate(48000).setAudioBitsPerSecond(192000)
+                .setNoiseSuppression(AudioRecordingOptions.Processing.DISABLED).setMimeTypes(List.of("audio/webm;codecs=opus"));
+        try (AudioRecorder enhanced = new AudioRecorder(10000, 60000, "Start", "Recording", "Ready", "Error", "Finish")
+                .setRecordingOptions(options).setSetup(new AudioRecorderSetup().setMicrophoneCaption("Mikrofon"))) {
+            options.setSampleRate(44100);
+            assertEquals(48000, enhanced.createUiComponent().getRecordingOptions().getSampleRate());
+            assertEquals(192000, enhanced.createUiComponent().getRecordingOptions().getAudioBitsPerSecond());
+            assertEquals(0, enhanced.createUiComponent().getRecordingOptions().getNoiseSuppression());
+            assertEquals("Mikrofon", enhanced.createUiComponent().getSetup().getMicrophoneCaption());
+            enhanced.render();
+            assertThrows(IllegalStateException.class, () -> enhanced.setSetup(new AudioRecorderSetup()));
+            assertThrows(IllegalStateException.class, () -> enhanced.setRecordingOptions(options));
+            enhanced.configureRecording(new AudioRecordingOptions().setSampleRate(44100));
+            assertTrue(commands.get(commands.size() - 1) instanceof UiAudioRecorder.ConfigureRecordingCommand);
+        }
+    }
+
+    @Test public void enhancedEventsRemainSeparateFromRecordingAndUploadLifecycle() {
+        try (AudioRecorder enhanced = new AudioRecorder(10000, 60000, "Start", "Recording", "Ready", "Error")
+                .setSetup(new AudioRecorderSetup())) {
+            List<String> legacy = new ArrayList<>(), setup = new ArrayList<>(), warnings = new ArrayList<>();
+            List<AudioRecorder.CaptureSettings> settings = new ArrayList<>();
+            List<List<AudioRecorder.InputDevice>> devices = new ArrayList<>();
+            enhanced.onStateChanged.addListener(value -> { legacy.add(value); });
+            enhanced.onSetupStateChanged.addListener(value -> { setup.add(value); });
+            enhanced.onWarning.addListener(value -> { warnings.add(value); });
+            enhanced.onCaptureSettingsChanged.addListener(value -> { settings.add(value); });
+            enhanced.onDevicesChanged.addListener(value -> { devices.add(value); });
+            enhanced.handleUiEvent(new UiAudioRecorder.SetupStateChangedEvent(enhanced.getId(), "testing"));
+            enhanced.handleUiEvent(new UiAudioRecorder.WarningEvent(enhanced.getId(), "configurationRejected"));
+            enhanced.handleUiEvent(new UiAudioRecorder.DevicesChangedEvent(enhanced.getId(), List.of(new UiAudioInputDevice().setDeviceId("usb").setLabel("USB"))));
+            enhanced.handleUiEvent(new UiAudioRecorder.CaptureSettingsChangedEvent(enhanced.getId(), new UiAudioCaptureSettings().setSampleRate(48000).setChannelCount(1)));
+            assertTrue(legacy.isEmpty());
+            assertEquals(List.of("testing"), setup);
+            assertEquals(List.of("configurationRejected"), warnings);
+            assertEquals("usb", devices.get(0).get(0).deviceId());
+            assertEquals(48000, settings.get(0).sampleRate());
+            enhanced.handleUiEvent(new UiAudioRecorder.WarningEvent(enhanced.getId(), "invented"));
+            enhanced.handleUiEvent(new UiAudioRecorder.SetupStateChangedEvent(enhanced.getId(), null));
+            assertEquals(1, warnings.size()); assertEquals(1, setup.size());
+        }
+    }
+
+    @Test public void invalidOptionsFailEarlyAndDraftIdentityCannotChange() {
+        assertThrows(IllegalArgumentException.class, () -> new AudioRecordingOptions().setSampleRate(-1));
+        assertThrows(IllegalArgumentException.class, () -> new AudioRecordingOptions().setAudioBitsPerSecond(0));
+        assertThrows(IllegalArgumentException.class, () -> new AudioRecordingOptions().setClippingThreshold(Float.NaN));
+        assertThrows(IllegalArgumentException.class, () -> new AudioRecordingOptions().setMimeTypes(List.of("video/mp4")));
+        assertThrows(IllegalArgumentException.class, () -> new AudioRecordingOptions().setLocalDraftKey(" "));
+        try (AudioRecorder enhanced = new AudioRecorder(10000, 60000, "Start", "Recording", "Ready", "Error")
+                .setRecordingOptions(new AudioRecordingOptions().setLocalDraftKey("user/report"))) {
+            enhanced.render();
+            assertThrows(IllegalArgumentException.class, () -> enhanced.configureRecording(new AudioRecordingOptions().setLocalDraftKey("other/report")));
+            enhanced.acknowledgeRecording();
+            assertTrue(commands.get(commands.size() - 1) instanceof UiAudioRecorder.AcknowledgeRecordingCommand);
+        }
+    }
 }

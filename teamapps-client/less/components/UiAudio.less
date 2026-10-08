@@ -46,3 +46,17 @@
 }
 
 .theme-dark .teamapps-compact-audio audio, .theme-dark .UiAudioRecorder audio { color-scheme: dark; }
+
+.UiAudioRecorder.enhanced-audio-recorder {
+  min-width: 0;
+  .audio-setup { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; text-align: left; }
+  .audio-setup label { display: flex; flex-direction: column; gap: 6px; flex: 1 1 220px; min-width: 0; margin: 0; }
+  select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--ta-state-info-border);
+    border-radius: 8px; background: var(--ta-bg-color); color: var(--ta-text-color); font: inherit; }
+  .audio-capture-settings { font-size: 12px; overflow-wrap: anywhere; }
+  .audio-warning, .audio-clipping { color: var(--ta-state-danger-text); background: var(--ta-state-danger-bg);
+    border: 1px solid var(--ta-state-danger-border); border-radius: 8px; padding: 8px; }
+  .audio-warning:empty, .audio-local-status:empty, .audio-capture-settings:empty { display: none; }
+  .audio-clipping { font-weight: bold; }
+  a { color: var(--ta-text-color); text-decoration: underline; }
+}

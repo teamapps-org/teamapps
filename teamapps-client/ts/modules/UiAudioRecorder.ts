@@ -3,13 +3,21 @@ import {TeamAppsUiContext} from "./TeamAppsUiContext";
 import {TeamAppsUiComponentRegistry} from "./TeamAppsUiComponentRegistry";
 import {parseHtml} from "./Common";
 import {TeamAppsEvent} from "./util/TeamAppsEvent";
-import {UiAudioRecorderConfig, UiAudioRecorderCommandHandler, UiAudioRecorderEventSource, UiAudioRecorder_StateChangedEvent, UiAudioRecorder_ChunkEvent} from "../generated/UiAudioRecorderConfig";
+import {UiAudioRecorderConfig, UiAudioRecorderCommandHandler, UiAudioRecorderEventSource, UiAudioRecorder_StateChangedEvent, UiAudioRecorder_ChunkEvent,
+    UiAudioRecorder_DevicesChangedEvent, UiAudioRecorder_CaptureSettingsChangedEvent, UiAudioRecorder_SetupStateChangedEvent, UiAudioRecorder_WarningEvent} from "../generated/UiAudioRecorderConfig";
+import {EnhancedAudioRecorder} from "./audio/EnhancedAudioRecorder";
+import {UiAudioRecordingOptionsConfig} from "../generated/UiAudioRecordingOptionsConfig";
 
 export const RECORDING_MIME_TYPES = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus", "audio/webm", "audio/wav"];
 
 export class UiAudioRecorder extends AbstractUiComponent<UiAudioRecorderConfig> implements UiAudioRecorderCommandHandler, UiAudioRecorderEventSource {
     readonly onStateChanged = new TeamAppsEvent<UiAudioRecorder_StateChangedEvent>();
     readonly onChunk = new TeamAppsEvent<UiAudioRecorder_ChunkEvent>();
+    readonly onDevicesChanged = new TeamAppsEvent<UiAudioRecorder_DevicesChangedEvent>();
+    readonly onCaptureSettingsChanged = new TeamAppsEvent<UiAudioRecorder_CaptureSettingsChangedEvent>();
+    readonly onSetupStateChanged = new TeamAppsEvent<UiAudioRecorder_SetupStateChangedEvent>();
+    readonly onWarning = new TeamAppsEvent<UiAudioRecorder_WarningEvent>();
+    private enhanced: EnhancedAudioRecorder;
     private main: HTMLElement;
     private startButton: HTMLButtonElement;
     private status: HTMLElement;
@@ -32,6 +40,18 @@ export class UiAudioRecorder extends AbstractUiComponent<UiAudioRecorderConfig> 
 
     constructor(config: UiAudioRecorderConfig, context: TeamAppsUiContext) {
         super(config, context);
+        if (config.recordingOptions || config.setup) {
+            this.enhanced = new EnhancedAudioRecorder(config, RECORDING_MIME_TYPES, {
+                state: state => this.onStateChanged.fire({state}),
+                setupState: state => this.onSetupStateChanged.fire({state}),
+                warning: code => this.onWarning.fire({code}),
+                devices: devices => this.onDevicesChanged.fire({devices}),
+                settings: settings => this.onCaptureSettingsChanged.fire({settings}),
+                chunk: chunk => this.onChunk.fire(chunk)
+            });
+            this.main = this.enhanced.element;
+            return;
+        }
         this.main = parseHtml(`<div class="UiAudioRecorder"><button type="button"></button><div role="status" aria-live="polite"></div><meter min="0" max="1" value="0"></meter><output>0:00</output><audio controls preload="none" hidden></audio></div>`);
         this.startButton = this.main.querySelector("button");
         this.startButton.textContent = config.startCaption;
@@ -121,10 +141,12 @@ export class UiAudioRecorder extends AbstractUiComponent<UiAudioRecorderConfig> 
     }
 
     finish() {
+        if (this.enhanced) { this.enhanced.finish(); return; }
         if (this.recorder?.state === "recording") this.recorder.stop();
     }
 
     async requestChunk(requestId: string, sequence: number) {
+        if (this.enhanced) { await this.enhanced.requestChunk(requestId, sequence); return; }
         if (this.disposed || !this.blob) { this.onStateChanged.fire({state: "error"}); return; }
         this.uploadId = requestId;
         const chunkSize = 192 * 1024;
@@ -160,6 +182,7 @@ export class UiAudioRecorder extends AbstractUiComponent<UiAudioRecorderConfig> 
     }
 
     discard() {
+        if (this.enhanced) { this.enhanced.discard(); return; }
         this.disposed = true; this.generation++; this.uploadId = null;
         if (this.recorder?.state === "recording") this.recorder.stop();
         this.releaseCapture();
@@ -169,5 +192,13 @@ export class UiAudioRecorder extends AbstractUiComponent<UiAudioRecorderConfig> 
         document.removeEventListener("visibilitychange", this.visibility);
     }
     destroy() { this.discard(); super.destroy(); }
+    configureRecording(options: UiAudioRecordingOptionsConfig) { this.enhanced?.configureRecording(options); }
+    refreshDevices() { return this.enhanced?.refreshDevices(); }
+    selectDevice(deviceId: string) { this.enhanced?.selectDevice(deviceId); }
+    startMicrophoneTest() { this.enhanced?.startMicrophoneTest(); }
+    stopMicrophoneTest() { this.enhanced?.stopMicrophoneTest(); }
+    acknowledgeRecording() { return this.enhanced?.acknowledgeRecording(); }
+    restoreLocalDraft() { this.enhanced?.restoreDraft(); }
+    deleteLocalDraft() { return this.enhanced?.deleteStoredDraft(); }
 }
 TeamAppsUiComponentRegistry.registerComponentClass("UiAudioRecorder", UiAudioRecorder);

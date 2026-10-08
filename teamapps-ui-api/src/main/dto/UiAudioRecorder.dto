@@ -6,9 +6,81 @@ class UiAudioRecorder extends UiComponent {
     String recordingCaption;
     String readyCaption;
     String errorCaption;
+    // Optional enhanced mode. Absent options/setup preserve the legacy recorder.
+    UiAudioRecordingOptions recordingOptions;
+    UiAudioRecorderSetup setup;
     command finish();
     command discard();
     command requestChunk(String requestId, int sequence);
     event stateChanged(String state);
     event chunk(String requestId, int sequence, String extension, String data, boolean last);
+    command configureRecording(UiAudioRecordingOptions options);
+    command refreshDevices();
+    command selectDevice(String deviceId);
+    command startMicrophoneTest();
+    command stopMicrophoneTest();
+    command acknowledgeRecording();
+    command restoreLocalDraft();
+    command deleteLocalDraft();
+    event devicesChanged(List<UiAudioInputDevice> devices);
+    event captureSettingsChanged(UiAudioCaptureSettings settings);
+    event setupStateChanged(String state);
+    event warning(String code);
+}
+
+class UiAudioRecordingOptions {
+    int sampleRate = 0; // 0: browser default
+    int sampleSize = 0;
+    int channelCount = 1;
+    int audioBitsPerSecond = 64000;
+    int echoCancellation = 1; // -1: browser default, 0: off, 1: on
+    int noiseSuppression = -1;
+    int autoGainControl = -1;
+    String deviceId;
+    List<String> mimeTypes;
+    boolean exactConstraints = false;
+    boolean stopWhenHidden = true;
+    int microphoneTestMaxDurationMillis = 300000;
+    int inactivityTimeoutMillis = 300000; // 0: explicitly disabled; enhanced mode only
+    double silenceThreshold = 0.005; // RMS amplitude used for inactivity detection
+    double clippingThreshold = 0.98;
+    // Opt-in completed-draft retention. The app must namespace this by user and report.
+    String localDraftKey;
+}
+
+class UiAudioRecorderSetup {
+    String microphoneCaption;
+    String defaultMicrophoneCaption;
+    String testCaption;
+    String stopTestCaption;
+    String testingCaption;
+    String settingsCaption;
+    String clippingCaption;
+    String deviceDisconnectedCaption;
+    String configurationRejectedCaption;
+    String testEndedCaption;
+    String inactivityCaption;
+    String downloadCaption;
+    String restoreCaption;
+    String discardDraftCaption;
+    String locallySavedCaption;
+    String localSaveErrorCaption;
+}
+
+class UiAudioInputDevice {
+    String deviceId;
+    String label;
+}
+
+class UiAudioCaptureSettings {
+    String deviceId;
+    String label;
+    int sampleRate;
+    int sampleSize;
+    int channelCount;
+    int audioBitsPerSecond;
+    int echoCancellation = -1;
+    int noiseSuppression = -1;
+    int autoGainControl = -1;
+    String mimeType;
 }
