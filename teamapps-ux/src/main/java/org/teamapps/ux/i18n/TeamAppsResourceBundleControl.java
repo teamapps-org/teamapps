@@ -45,34 +45,38 @@ public class TeamAppsResourceBundleControl extends ResourceBundle.Control {
 	}
 
 	@Override
-	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IOException {
-		// The below is a copy of the default implementation.
-		String bundleName = toBundleName(baseName, locale);
-		String resourceName = toResourceName(bundleName, resourceFileSuffix);
-		ResourceBundle bundle = null;
-		InputStream stream = null;
-		if (reload) {
-			URL url = loader.getResource(resourceName);
-			if (url != null) {
-				URLConnection connection = url.openConnection();
-				if (connection != null) {
-					connection.setUseCaches(false);
-					stream = connection.getInputStream();
-				}
-			}
-		} else {
-			stream = loader.getResourceAsStream(resourceName);
-		}
-		if (stream != null) {
-			try {
-				// Only this line is changed to make it to read properties files as UTF-8.
-				bundle = new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
-			} finally {
-				stream.close();
-			}
-		}
-		return bundle;
-	}
+public ResourceBundle newBundle(
+    String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+    throws IllegalAccessException, InstantiationException, IOException {
+
+    // The below is a copy of the default implementation.
+    String bundleName = toBundleName(baseName, locale);
+    String resourceName = toResourceName(bundleName, "properties");
+    ResourceBundle bundle = null;
+
+    if (reload) {
+        URL url = loader.getResource(resourceName);
+        if (url != null) {
+            URLConnection connection = url.openConnection();
+            if (connection != null) {
+                connection.setUseCaches(false);
+                try (InputStream stream = connection.getInputStream();
+                     InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                    bundle = new PropertyResourceBundle(reader);
+                }
+            }
+        }
+    } else {
+        try (InputStream stream = loader.getResourceAsStream(resourceName);
+             InputStreamReader reader = stream != null ? new InputStreamReader(stream, StandardCharsets.UTF_8) : null) {
+            if (reader != null) {
+                bundle = new PropertyResourceBundle(reader);
+            }
+        }
+    }
+    return bundle;
+}
+
 
 	@Override
 	public Locale getFallbackLocale(String baseName, Locale locale) {
