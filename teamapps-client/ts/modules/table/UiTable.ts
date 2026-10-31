@@ -61,6 +61,7 @@ import {nonRecursive} from "../util/nonRecursive";
 import {UiFieldMessageSeverity} from "../../generated/UiFieldMessageSeverity";
 import {UiTableClientRecordConfig} from "../../generated/UiTableClientRecordConfig";
 import {UiTableRowSelectionModel} from "./UiTableRowSelectionModel";
+import {selectGridRowsAndActivate} from "./TableSelection";
 import {ContextMenu} from "../micro-components/ContextMenu";
 import {UiComponent} from "../UiComponent";
 import {UiTextAlignment} from "../../generated/UiTextAlignment";
@@ -831,7 +832,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 		const rowIndexes = recordIds.map(id => this.dataProvider.getRowIndexByRecordId(id));
 		this.doWithoutFiringSelectionEvent(() => {
 			if (rowIndexes.length > 0) {
-				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
+				selectGridRowsAndActivate(this._grid, rowIndexes);
 				if (scrollToFirstIfAvailable) {
 					this._grid.scrollRowIntoView(rowIndexes[0], false);
 				}
@@ -845,7 +846,7 @@ export class UiTable extends AbstractUiComponent<UiTableConfig> implements UiTab
 	public selectRows(rowIndexes: number[], scrollToFirst: boolean) {
 		this.doWithoutFiringSelectionEvent(() => {
 			if (rowIndexes.length > 0) {
-				this.doWithoutFiringSelectionEvent(() => this._grid.setSelectedRows(rowIndexes));
+				selectGridRowsAndActivate(this._grid, rowIndexes);
 				if (scrollToFirst) {
 					this._grid.scrollRowIntoView(rowIndexes[0], false);
 				}
