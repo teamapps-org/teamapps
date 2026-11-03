@@ -391,7 +391,7 @@ export class TrivialComboBox<E> implements TrivialComponent {
 		let changing = !objectEquals(entry, this.selectedEntry);
 		this.selectedEntry = entry;
 		this.$selectedEntryWrapper.innerHTML = '';
-		let $selectedEntry = parseHtml(this.config.selectedEntryRenderingFunction(entry));
+		let $selectedEntry = entry == null ? null : parseHtml(this.config.selectedEntryRenderingFunction(entry));
 		if ($selectedEntry != null) {
 			$selectedEntry.classList.add("tr-combobox-entry");
 			this.$selectedEntryWrapper.append($selectedEntry);
