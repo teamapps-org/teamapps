@@ -57,8 +57,9 @@ test('playing another voice message pauses only the previous voice player', () =
     expect(first.audio.pause).toHaveBeenCalledTimes(1); expect(second.audio.pause).not.toHaveBeenCalled();
     first.destroy(); second.destroy();
 });
-test('time limit and release work while audio metering is waiting to resume', async () => {
+test.each([0, 9500, 15000])('time limit and release work while audio metering is waiting to resume (clock starts at %i ms)', async (startedAt) => {
     jest.useFakeTimers(); const stopTrack = jest.fn(); let resume: () => void;
+    const clock = jest.spyOn(performance, 'now').mockReturnValue(startedAt);
     const track = {stop: stopTrack, addEventListener: jest.fn()};
     Object.defineProperty(window, 'isSecureContext', {value: true, configurable: true});
     Object.defineProperty(navigator, 'mediaDevices', {value: {getUserMedia: async () => ({getTracks: () => [track]})}, configurable: true});
@@ -72,13 +73,20 @@ test('time limit and release work while audio metering is waiting to resume', as
         stop() { this.state = 'inactive'; this.onstop(); }
     };
     const recorder = new UiAudioRecorder({maxBytes: 10000, maxDurationMillis: 1000} as any, {} as any);
-    recorder.doGetMainElement().querySelector('button').click(); await Promise.resolve(); await Promise.resolve();
-    const clock = jest.spyOn(performance, 'now').mockReturnValue(10000);
-    jest.advanceTimersByTime(1100);
-    expect(recording.state).toBe('inactive'); expect(stopTrack).toHaveBeenCalledTimes(1);
-    resume(); await Promise.resolve(); await Promise.resolve();
-    expect(jest.getTimerCount()).toBe(0);
-    recorder.discard(); clock.mockRestore(); jest.useRealTimers();
+    try {
+        recorder.doGetMainElement().querySelector('button').click(); await Promise.resolve(); await Promise.resolve();
+        // Keep the monotonic clock and fake timers relative to the same controlled start.
+        clock.mockReturnValue(startedAt + 900);
+        jest.advanceTimersByTime(900);
+        expect(recording.state).toBe('recording'); expect(stopTrack).not.toHaveBeenCalled();
+        clock.mockReturnValue(startedAt + 1100);
+        jest.advanceTimersByTime(200);
+        expect(recording.state).toBe('inactive'); expect(stopTrack).toHaveBeenCalledTimes(1);
+        resume(); await Promise.resolve(); await Promise.resolve();
+        expect(jest.getTimerCount()).toBe(0);
+    } finally {
+        recorder.discard(); clock.mockRestore(); jest.useRealTimers();
+    }
 });
 
 test('native voice player uses browser controls without additional requests', () => {
